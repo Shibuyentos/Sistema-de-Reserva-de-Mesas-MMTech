@@ -2,10 +2,6 @@
 const pool = require('../config/database');
 
 class MesaController {
-    /**
-     * Registra uma nova mesa no banco de dados.
-     * Espera receber a 'capacidade' no corpo da requisição.
-     */
     async registrarMesa(req, res) { // Método/Função
         // 'req.body' é onde chegam os dados enviados numa requisição POST.
         const { capacidade } = req.body; // = const capacidade = req.body.capacidade;
@@ -37,10 +33,7 @@ class MesaController {
             });
         }
     }
-
-    /**
-     * Lista todas as mesas cadastradas no banco de dados.
-     */
+    //Lista todas as mesas cadastradas no banco de dados.
     async listarMesas(req, res) { //Método/Função
         try {
             const query = 'SELECT * FROM mesas ORDER BY id ASC';
