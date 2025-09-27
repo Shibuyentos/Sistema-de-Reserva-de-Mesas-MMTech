@@ -4,6 +4,6 @@ const TesteController = require('../controllers/TesteController');
 const router = express.Router();
 
 // GET /api/teste
-router.get('/', testeController.testeBasico);
+router.get('/', TesteController.testeBasico);
 
 module.exports = router;
