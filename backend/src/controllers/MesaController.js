@@ -6,11 +6,12 @@ class MesaController {
         // 'req.body' é onde chegam os dados enviados numa requisição POST.
         const { capacidade } = req.body; // = const capacidade = req.body.capacidade;
 
-        // Validação simples: a capacidade foi enviada?
-        if (!capacidade) { //Se NÃO existir capacidade, retorne...
-            return res
-                .status(400) //400 → Bad Request
-                .json({ success: false, message: 'O campo "capacidade" é obrigatório.'});
+        // Validação simples: a capacidade foi enviada? É um número válido?
+        if (!capacidade || typeof capacidade !== 'number' || capacidade <= 0) { 
+            return res.status(400).json({ 
+                success: false, 
+                message: 'O campo "capacidade" é obrigatório e deve ser um número positivo.'
+            });
         }
 
         try {
@@ -33,6 +34,7 @@ class MesaController {
             });
         }
     }
+
     //Lista todas as mesas cadastradas no banco de dados.
     async listarMesas(req, res) { //Método/Função
         try {
