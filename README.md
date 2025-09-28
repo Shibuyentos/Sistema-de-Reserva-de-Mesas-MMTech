@@ -130,8 +130,6 @@ GET /api/reservas/disponiveis?inicio=ISO&fim=ISO
 POST /api/reservas/reservar  
 POST /api/reservas/check_in/:reserva_id  
 POST /api/reservas/check_out/:reserva_id  
-<<<<<<< HEAD
-GET /api/teste  
-=======
-GET /api/teste  
->>>>>>> 8855f6dfaebbad9d6005803717c7280e1e414f2d
+
+---
+
