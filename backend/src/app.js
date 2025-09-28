@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const testeRoutes = require('./routes/TesteRoutes');
 const mesaRoutes = require('./routes/MesaRoutes');
 const reservaRoutes = require('./routes/ReservaRoutes');
 
@@ -14,7 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Rotas
-app.use('/api/teste', testeRoutes);
 app.use('/api/mesas', mesaRoutes);
 app.use('/api/reservas', reservaRoutes);
 
