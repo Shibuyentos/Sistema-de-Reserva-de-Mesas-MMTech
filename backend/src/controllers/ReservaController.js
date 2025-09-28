@@ -59,6 +59,64 @@ class ReservaController {
         }
     }
 
+
+    async SolicitarReserva(req,res) {
+        const { mesa_id, finalidade, data_hora_inicio, data_hora_fim, membro } = req.body;
+
+        const inicioDate = new Date(data_hora_inicio);
+        const fimDate = new Date(data_hora_fim);
+
+        if (!mesa_id || !finalidade || !data_hora_inicio || !data_hora_fim || !membro) {
+            return res.status(400).json({ 
+                success: false,
+                message: "Dados incompletos. É necessário fornecer número da mesa, finalidade, data_hora_inicio, data_hora_fim e membro." 
+            });
+        }
+
+        if (Number.isNaN(inicioDate.getTime()) || Number.isNaN(fimDate.getTime()) || inicioDate >= fimDate) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'As datas fornecidas são inválidas ou a data de início não é anterior à de fim.' 
+            });
+        }
+
+        try {
+            await pool.query('BEGIN'); // Inicia uma transação para garantir a consistência dos dados
+
+            const QueryVerificaConflito = 'SELECT 1 FROM reservas WHERE mesa_id = $1 AND data_hora_inicio < $3 AND data_hora_fim > $2';
+            const ResultadoConflito = await pool.query(QueryVerificaConflito, [mesa_id, inicioDate, fimDate]);
+
+            if(ResultadoConflito.rows.length > 0) {
+                await pool.query('ROLLBACK') //Desfaz a Transação
+                return res
+                .status(409) // 409 Conflict
+                .json({success: false, message: `A mesa ID ${mesa_id} já está para este horário`})
+            }
+            
+            //Fazendo o INSERT para a nova Reserva:
+            const QueryInsert = 'INSERT INTO reservas (mesa_id, finalidade, data_hora_inicio, data_hora_fim, membro) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+            const Values = [mesa_id, finalidade, inicioDate, fimDate, membro];
+            const result = await pool.query(QueryInsert, Values);
+
+            await pool.query('COMMIT'); // Confirma a Transação
+
+            res
+                .status(201)
+                .json({
+                    success: true,
+                    messagem: 'Reserva efetuada com sucesso!',
+                    reserva: result.rows[0],
+                })
+
+        } catch (error) {
+            await pool.query('ROLLBACK'); // Desfaz a transação em caso de erro
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao solicitar a reserva.',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = new ReservaController();
