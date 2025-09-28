@@ -1,67 +1,80 @@
-# Gerencimento-de-mesas-MMTech
-Descrição
+#  Sistema de Gerenciamento de Mesas – MMTech
 
-Este projeto é parte do teste de desenvolvimento para criação de um sistema de reserva de mesas em coworking.
-Até o momento, foram implementadas as seguintes funcionalidades:
+Sistema de reserva de mesas para coworking em Node.js + Express com PostgreSQL.  
+Permite cadastrar mesas, solicitar reservas, consultar disponibilidade e registrar check-in/check-out de forma simples e eficiente.
 
-Rota de Teste (/api/teste) → confirma que a API está rodando.
+---
 
-Registro de Mesas (POST /api/mesas) → permite cadastrar mesas informando sua capacidade.
+##  Funcionalidades
 
-Listagem de Mesas (GET /api/mesas) → retorna todas as mesas cadastradas no banco.
+### Cadastro de mesas
+Descrição: Cadastra uma nova mesa com capacidade e status inicial.  
+Método e rota: POST /api/mesas  
+Exemplo de corpo: { "capacidade": 4 }
 
-Estrutura inicial do banco de dados com tabelas de mesas e reservas.
+### Listagem de mesas
+Descrição: Retorna todas as mesas cadastradas.  
+Método e rota: GET /api/mesas
 
-Tecnologias Utilizadas
+### Consulta de disponibilidade
+Descrição: Lista mesas disponíveis entre um início e um fim.  
+Método e rota: GET /api/reservas/disponiveis?inicio=2025-09-28T10:00:00Z&fim=2025-09-28T12:00:00Z
 
-Node.js (runtime JavaScript)
+### Solicitação de reserva
+Descrição: Cria uma reserva informando mesa, finalidade, período e membro.  
+Método e rota: POST /api/reservas/reservar  
+Exemplo de corpo: { "mesa_id": 1, "finalidade": "Reunião", "data_hora_inicio": "2025-09-28T10:00:00Z", "data_hora_fim": "2025-09-28T12:00:00Z", "membro": "João Silva" }
 
-Express (framework para criação da API)
+### Check-in da reserva
+Descrição: Marca o horário de check-in de uma reserva existente.  
+Método e rota: POST /api/reservas/check_in/:reserva_id
 
-PostgreSQL (banco de dados relacional)
+### Check-out da reserva
+Descrição: Marca o horário de check-out de uma reserva existente.  
+Método e rota: POST /api/reservas/check_out/:reserva_id
 
-pg (driver do PostgreSQL para Node.js)
+### Teste da API
+Descrição: Verifica se o servidor está rodando.  
+Método e rota: GET /api/teste
 
-dotenv (gerenciamento de variáveis de ambiente)
+---
 
-cors (configuração de CORS para permitir requisições externas)
+##  Estrutura do Projeto
 
-nodemon (ambiente de desenvolvimento com hot reload)
-
-Estrutura do Projeto
-Gerencimento de mesas MMTech
+```bash
+Gerencimento-de-mesas-MMTech
 ├── backend
-│   ├── src
-│   │   ├── config
-│   │   │   └── database.js
-│   │   ├── controllers
-│   │   │   ├── MesaController.js
-│   │   │   └── TesteController.js
-│   │   ├── routes
-│   │   │   ├── MesaRoutes.js
-│   │   │   └── TesteRoutes.js
-│   │   └── app.js
-│   ├── server.js
-│   └── sql
-│       └── init.sql
-├── package.json
-└── .env.exemple
+│ ├── src
+│ │ ├── config
+│ │ │ └── database.js
+│ │ ├── controllers
+│ │ │ ├── MesaController.js
+│ │ │ ├── ReservaController.js
+│ │ │ └── TesteController.js
+│ │ ├── routes
+│ │ │ ├── MesaRoutes.js
+│ │ │ ├── ReservaRoutes.js
+│ │ │ └── TesteRoutes.js
+│ │ └── app.js
+│ ├── package.json
+│ └── server.js
+├── .env
+├── .env.exemple
+├── .gitignore
+└── README.md
+```
 
-Configuração do Banco de Dados
+---
 
-Certifique-se de que o PostgreSQL está instalado e rodando na sua máquina.
+##  Tecnologias
 
-Crie o banco de dados:
+Node.js, Express, PostgreSQL, pg, dotenv, cors, nodemon.
 
-CREATE DATABASE data_warehouse;
+---
 
+##  Banco de Dados (tabelas)
 
-Rode o script init.sql localizado em backend/sql/init.sql para criar as tabelas necessárias:
-
-psql -U postgres -d data_warehouse -f backend/sql/init.sql
-
-Script init.sql
--- Tabela de mesas
+```sql
 CREATE TABLE mesas (
     id SERIAL PRIMARY KEY,
     capacidade INTEGER NOT NULL,
@@ -69,74 +82,52 @@ CREATE TABLE mesas (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabela de reservas
 CREATE TABLE reservas (
     id SERIAL PRIMARY KEY,
-    mesa_id INTEGER NOT NULL, -- Relaciona com a mesa
+    mesa_id INTEGER NOT NULL,
     finalidade VARCHAR(255) NOT NULL,
     data_hora_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
-    data_hora_fim TIMESTAMP WITH TIME ZONE, -- Opcional, pode ser preenchido no check-out
-    check_in_at TIMESTAMP WITH TIME ZONE, -- Registra o momento do check-in
-    check_out_at TIMESTAMP WITH TIME ZONE, -- Registra o momento do check-out
-
-    CONSTRAINT fk_mesa
-        FOREIGN KEY(mesa_id) 
-        REFERENCES mesas(id)
+    data_hora_fim TIMESTAMP WITH TIME ZONE,
+    check_in_at TIMESTAMP WITH TIME ZONE,
+    check_out_at TIMESTAMP WITH TIME ZONE,
+    membro VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_mesa FOREIGN KEY(mesa_id) REFERENCES mesas(id)
 );
+```
 
-Configuração e Execução
-1. Clonar o repositório
-git clone https://github.com/usuario/Gerencimento-de-mesas-MMTech.git
-cd Gerencimento-de-mesas-MMTech/backend
+---
 
-2. Instalar dependências
-npm install
+##  Como rodar localmente
 
-3. Configurar variáveis de ambiente
+Clonar o repositório:  
+git clone https://github.com/SEU_USUARIO/Gerencimento-de-mesas-MMTech.git  
+cd Gerencimento-de-mesas-MMTech/backend  
 
-Crie um arquivo .env na pasta backend/ baseado no .env.exemple:
+Instalar dependências:  
+npm install  
 
-PORT=3000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=data_warehouse
-DB_USER=postgres
-DB_PASSWORD=sua_senha
+Criar e preencher o arquivo .env:  
+PORT=3000  
+DB_HOST=localhost  
+DB_PORT=5432  
+DB_NAME=postgres  
+DB_USER=postgres  
+DB_PASSWORD=sua_senha  
 
-4. Rodar o servidor em desenvolvimento
-npm run dev
+Iniciar o servidor:  
+npm run dev  
 
+URL padrão do servidor:  
+http://localhost:3000
 
-Se tudo estiver correto, o terminal mostrará:
+---
 
-Servidor rodando na porta 3000
-Acesse: http://localhost:3000
-✅ Conectado ao PostgreSQL
+##  Rotas rápidas (cheat sheet)
 
-Endpoints Disponíveis
-Teste
-
-GET http://localhost:3000/api/teste
-Retorna uma mensagem confirmando que a API está rodando.
-
-Mesas
-
-GET /api/mesas → lista todas as mesas cadastradas.
-
-POST /api/mesas → cria uma nova mesa.
-
-Body esperado:
-
-{
-  "capacidade": 4
-}
-
-Próximos Objetivos
-
-Implementar rotas de reservas de mesas (data, horário e finalidade).
-
-Criar lógica para atribuição de mesas após aprovação.
-
-Registrar check-in e check-out dos membros.
-
-Gerar relatórios de uso e ocupação.
+POST /api/mesas  
+GET /api/mesas  
+GET /api/reservas/disponiveis?inicio=ISO&fim=ISO  
+POST /api/reservas/reservar  
+POST /api/reservas/check_in/:reserva_id  
+POST /api/reservas/check_out/:reserva_id  
+GET /api/teste  
