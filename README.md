@@ -1,78 +1,96 @@
-#  Sistema de Gerenciamento de Mesas – MMTech
+# Sistema de Gerenciamento de Mesas – MMTech
 
-Sistema de reserva de mesas para coworking em Node.js + Express com PostgreSQL.  
+Sistema de reserva de mesas para coworking em **Node.js + Express com PostgreSQL**.  
 Permite cadastrar mesas, solicitar reservas, consultar disponibilidade e registrar check-in/check-out de forma simples e eficiente.
 
 ---
 
-##  Funcionalidades
+## Funcionalidades
 
 ### Cadastro de mesas
-Descrição: Cadastra uma nova mesa com capacidade e status inicial.  
-Método e rota: POST /api/mesas  
-Exemplo de corpo: { "capacidade": 4 }
+- **Descrição:** Cadastra uma nova mesa com capacidade e status inicial.  
+- **Rota:** `POST /api/mesas`  
+- **Exemplo corpo:**  
+```json
+{ "capacidade": 4 }
+```
 
 ### Listagem de mesas
-Descrição: Retorna todas as mesas cadastradas.  
-Método e rota: GET /api/mesas
+- **Descrição:** Retorna todas as mesas cadastradas.  
+- **Rota:** `GET /api/mesas`
 
 ### Consulta de disponibilidade
-Descrição: Lista mesas disponíveis entre um início e um fim.  
-Método e rota: GET /api/reservas/disponiveis?inicio=2025-09-28T10:00:00Z&fim=2025-09-28T12:00:00Z
+- **Descrição:** Lista mesas disponíveis entre um início e um fim.  
+- **Rota:**  
+```
+GET /api/reservas/disponiveis?inicio=2025-09-28T10:00:00Z&fim=2025-09-28T12:00:00Z
+```
 
 ### Solicitação de reserva
-Descrição: Cria uma reserva informando mesa, finalidade, período e membro.  
-Método e rota: POST /api/reservas/reservar  
-Exemplo de corpo: { "mesa_id": 1, "finalidade": "Reunião", "data_hora_inicio": "2025-09-28T10:00:00Z", "data_hora_fim": "2025-09-28T12:00:00Z", "membro": "João Silva" }
+- **Descrição:** Cria uma reserva informando mesa, finalidade, período e membro.  
+- **Rota:** `POST /api/reservas/reservar`  
+- **Exemplo corpo:**  
+```json
+{ 
+  "mesa_id": 1, 
+  "finalidade": "Reunião", 
+  "data_hora_inicio": "2025-09-28T10:00:00Z", 
+  "data_hora_fim": "2025-09-28T12:00:00Z", 
+  "membro": "João Silva" 
+}
+```
 
 ### Check-in da reserva
-Descrição: Marca o horário de check-in de uma reserva existente.  
-Método e rota: POST /api/reservas/check_in/:reserva_id
+- **Descrição:** Marca o horário de check-in de uma reserva existente.  
+- **Rota:** `POST /api/reservas/check_in/:reserva_id`
 
 ### Check-out da reserva
-Descrição: Marca o horário de check-out de uma reserva existente.  
-Método e rota: POST /api/reservas/check_out/:reserva_id
+- **Descrição:** Marca o horário de check-out de uma reserva existente.  
+- **Rota:** `POST /api/reservas/check_out/:reserva_id`
 
 ### Teste da API
-Descrição: Verifica se o servidor está rodando.  
-Método e rota: GET /api/teste
+- **Descrição:** Verifica se o servidor está rodando.  
+- **Rota:** `GET /` (raiz)
 
 ---
 
-##  Estrutura do Projeto
+## Estrutura do Projeto
 
 ```bash
-Gerencimento-de-mesas-MMTech
+Gerenciamento-de-mesas-MMTech
 ├── backend
-│ ├── src
-│ │ ├── config
-│ │ │ └── database.js
-│ │ ├── controllers
-│ │ │ ├── MesaController.js
-│ │ │ ├── ReservaController.js
-│ │ │ └── TesteController.js
-│ │ ├── routes
-│ │ │ ├── MesaRoutes.js
-│ │ │ ├── ReservaRoutes.js
-│ │ │ └── TesteRoutes.js
-│ │ └── app.js
-│ ├── package.json
-│ └── server.js
-├── .env
-├── .env.exemple
+│   ├── src
+│   │   ├── config
+│   │   │   └── database.js
+│   │   ├── controllers
+│   │   │   ├── MesaController.js
+│   │   │   └── ReservaController.js
+│   │   ├── routes
+│   │   │   ├── MesaRoutes.js
+│   │   │   └── ReservaRoutes.js
+│   │   └── app.js
+│   ├── package.json
+│   └── server.js
+├── .env.example
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-##  Tecnologias
+## Tecnologias
 
-Node.js, Express, PostgreSQL, pg, dotenv, cors, nodemon.
+- Node.js  
+- Express  
+- PostgreSQL  
+- pg  
+- dotenv  
+- cors  
+- nodemon  
 
 ---
 
-##  Banco de Dados (tabelas)
+## Banco de Dados (tabelas)
 
 ```sql
 CREATE TABLE mesas (
@@ -97,39 +115,57 @@ CREATE TABLE reservas (
 
 ---
 
-##  Como rodar localmente
+## 🖥 Como rodar localmente
 
-Clonar o repositório:  
-git clone https://github.com/SEU_USUARIO/Gerencimento-de-mesas-MMTech.git  
-cd Gerencimento-de-mesas-MMTech/backend  
+1. **Clonar o repositório**  
+```bash
+git clone https://github.com/SEU_USUARIO/Gerenciamento-de-mesas-MMTech.git
+cd Gerenciamento-de-mesas-MMTech/backend
+```
 
-Instalar dependências:  
-npm install  
+2. **Instalar dependências**  
+```bash
+npm install
+```
 
-Criar e preencher o arquivo .env:  
-PORT=3000  
-DB_HOST=localhost  
-DB_PORT=5432  
-DB_NAME=postgres  
-DB_USER=postgres  
-DB_PASSWORD=sua_senha  
+3. **Configurar variáveis de ambiente**  
+Crie o arquivo `.env` na pasta `backend` (baseado no `.env.example`):  
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+```
 
-Iniciar o servidor:  
-npm run dev  
+4. **Criar tabelas no PostgreSQL**  
+Execute no banco as queries do tópico [Banco de Dados](#-banco-de-dados-tabelas).
 
-URL padrão do servidor:  
-http://localhost:3000
+5. **Iniciar o servidor**  
+```bash
+npm run dev
+```
+
+6. **Acessar servidor**  
+[http://localhost:3000](http://localhost:3000)
 
 ---
 
-##  Rotas rápidas (cheat sheet)
+## Rotas rápidas (cheat sheet)
 
-POST /api/mesas  
-GET /api/mesas  
-GET /api/reservas/disponiveis?inicio=ISO&fim=ISO  
-POST /api/reservas/reservar  
-POST /api/reservas/check_in/:reserva_id  
-POST /api/reservas/check_out/:reserva_id  
+- `POST /api/mesas`  
+- `GET /api/mesas`  
+- `GET /api/reservas/disponiveis?inicio=ISO&fim=ISO`  
+- `POST /api/reservas/reservar`  
+- `POST /api/reservas/check_in/:reserva_id`  
+- `POST /api/reservas/check_out/:reserva_id`  
+- `GET /` (teste do servidor)
 
 ---
 
+## Observações
+
+- O arquivo `.env.example` serve apenas como modelo, não é lido pelo Node.  
+- A rota de teste é a raiz `/` (não existe `/api/teste`).  
+- As tabelas precisam estar criadas antes de usar as rotas de reserva.  
