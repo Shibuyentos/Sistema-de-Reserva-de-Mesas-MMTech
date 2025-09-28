@@ -117,6 +117,54 @@ class ReservaController {
             });
         }
     }
+
+    async CheckIn(req, res) {
+        const reserva_id = Number(req.params.reserva_id)
+        const QueryUpdate = 'UPDATE  reservas SET check_in_at = CURRENT_TIMESTAMP WHERE id = $1'
+        const result = await pool.query(QueryUpdate, [reserva_id]);
+
+        try{
+            await pool.query(QueryUpdate, [reserva_id]);
+            res
+                .status(201)
+                .json({
+                    success: true,
+                    messagem: 'Check_in efetuado com sucesso!',
+                    reserva: result.rows[0],
+                })
+
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao realizar o check_in',
+                error: error.message
+            });
+        }
+    }
+
+        async CheckOut(req, res) {
+        const reserva_id = Number(req.params.reserva_id)
+        const QueryUpdate = 'UPDATE  reservas SET check_out_at = CURRENT_TIMESTAMP WHERE id = $1'
+        const result = await pool.query(QueryUpdate, [reserva_id]);
+
+        try{
+            await pool.query(QueryUpdate, [reserva_id]);
+            res
+                .status(201)
+                .json({
+                    success: true,
+                    messagem: 'Check_out efetuado com sucesso. Até a proxima!',
+                    reserva: result.rows[0],
+                })
+
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erro ao realizar o check_out',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = new ReservaController();

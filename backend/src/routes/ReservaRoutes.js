@@ -12,5 +12,13 @@ router.get('/disponiveis', ReservaController.listarMesasDisponiveis);
 // Acessada via: POST http://localhost:3000/api/reservas/reservar
 router.post('/reservar', ReservaController.SolicitarReserva);
 
+// Rota para Realizar Check IN
+// Acessada via: POST http://localhost:3000/api/reservas/check_in/$1
+router.post('/check_in/:reserva_id', ReservaController.CheckIn);
+
+// Rota para Relizar Check Out
+// Acessada via: POST http://localhost:3000/api/reservas/reservar
+router.post('/check_out/:reserva_id', ReservaController.CheckOut);
+
 
 module.exports = router;
