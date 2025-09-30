@@ -61,7 +61,7 @@ class ReservaController {
 
 
     async SolicitarReserva(req,res) {
-        const { mesa_id, finalidade, data_hora_inicio, data_hora_fim, membro } = req.body;
+        const { mesa_id, finalidade, data_hora_inicio, data_hora_fim, membro,} = req.body;
 
         const inicioDate = new Date(data_hora_inicio);
         const fimDate = new Date(data_hora_fim);
@@ -93,10 +93,14 @@ class ReservaController {
                 .json({success: false, message: `A mesa ID ${mesa_id} já está para este horário`})
             }
             
+            
             //Fazendo o INSERT para a nova Reserva:
             const QueryInsert = 'INSERT INTO reservas (mesa_id, finalidade, data_hora_inicio, data_hora_fim, membro) VALUES ($1, $2, $3, $4, $5) RETURNING *';
             const Values = [mesa_id, finalidade, inicioDate, fimDate, membro];
-            const result = await pool.query(QueryInsert, Values);
+            const ResultReserva = await pool.query(QueryInsert, Values);
+
+            const QueryUpdateMesa = "UPDATE mesas SET status = 'indisponível' WHERE id = $1";
+            await pool.query(QueryUpdateMesa, [mesa_id]);
 
             await pool.query('COMMIT'); // Confirma a Transação
 
@@ -105,7 +109,7 @@ class ReservaController {
                 .json({
                     success: true,
                     messagem: 'Reserva efetuada com sucesso!',
-                    reserva: result.rows[0],
+                    reserva: ResultReserva.rows[0],
                 })
 
         } catch (error) {
