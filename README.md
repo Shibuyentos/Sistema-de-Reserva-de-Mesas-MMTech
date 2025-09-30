@@ -1,171 +1,136 @@
-# Sistema de Gerenciamento de Mesas – MMTech
 
-Sistema de reserva de mesas para coworking em **Node.js + Express com PostgreSQL**.  
-Permite cadastrar mesas, solicitar reservas, consultar disponibilidade e registrar check-in/check-out de forma simples e eficiente.
+# Sistema de Reserva de Mesas MMTech 
 
----
+##  Funcionalidades
 
-## Funcionalidades
+- **Backend (API RESTful)**
+  - `[✅]` Cadastro de novas mesas.
+  - `[✅]` Listagem de todas as mesas e de mesas disponíveis.
+  - `[✅]` Sistema de reserva com verificação de conflitos de horários para evitar sobreposições.
+  - `[✅]` Funcionalidades de Check-in e Check-out para as reservas.
+  - `[✅]` Conexão com banco de dados PostgreSQL.
 
-### Cadastro de mesas
-- **Descrição:** Cadastra uma nova mesa com capacidade e status inicial.  
-- **Rota:** `POST /api/mesas`  
-- **Exemplo corpo:**  
-```json
-{ "capacidade": 4 }
-```
+- **Frontend (React App)**
+  - `[✅]` Interface reativa construída com React e Vite.
+  - `[✅]` Visualização das mesas disponíveis em tempo real.
+  - `[✅]` Modal para realizar reservas de forma simples e intuitiva.
+  - `[✅]` Comunicação com o backend para obter dados e criar reservas.
 
-### Listagem de mesas
-- **Descrição:** Retorna todas as mesas cadastradas.  
-- **Rota:** `GET /api/mesas`
+##  Tecnologias Utilizadas
 
-### Consulta de disponibilidade
-- **Descrição:** Lista mesas disponíveis
-- **Rota:**  
-```
-GET /api/reservas/disponiveis
-```
+| Componente | Tecnologias                                            |
+|------------|--------------------------------------------------------|
+| **Backend**| Node.js, Express, PostgreSQL, Cors, Dotenv             |
+| **Frontend**| React, Vite, Axios                                     |
+| **Gestão** | Git, GitHub, NPM                                       |
 
-### Solicitação de reserva
-- **Descrição:** Cria uma reserva informando mesa, finalidade, período e membro.  
-- **Rota:** `POST /api/reservas/reservar`  
-- **Exemplo corpo:**  
-```json
-{ 
-  "mesa_id": 1, 
-  "finalidade": "Reunião", 
-  "data_hora_inicio": "2025-09-28T10:00:00Z", 
-  "data_hora_fim": "2025-09-28T12:00:00Z", 
-  "membro": "João Silva" 
-}
-```
+##  Pré-requisitos
 
-### Check-in da reserva
-- **Descrição:** Marca o horário de check-in de uma reserva existente.  
-- **Rota:** `POST /api/reservas/check_in/:reserva_id`
+Antes de começar, certifique-se de que tem as seguintes ferramentas instaladas na sua máquina:
+- [Node.js](https://nodejs.org/en/) (que inclui o NPM)
+- [PostgreSQL](https://www.postgresql.org/download/)
 
-### Check-out da reserva
-- **Descrição:** Marca o horário de check-out de uma reserva existente.  
-- **Rota:** `POST /api/reservas/check_out/:reserva_id`
+##  Instalação e Execução
 
-### Teste da API
-- **Descrição:** Verifica se o servidor está rodando.  
-- **Rota:** `GET /` (raiz)
+Siga os passos abaixo para configurar e executar o projeto localmente.
 
----
-
-## Estrutura do Projeto
+### 1. Clonar o Repositório
 
 ```bash
-Gerenciamento-de-mesas-MMTech
-├── backend
-│   ├── src
-│   │   ├── config
-│   │   │   └── database.js
-│   │   ├── controllers
-│   │   │   ├── MesaController.js
-│   │   │   └── ReservaController.js
-│   │   ├── routes
-│   │   │   ├── MesaRoutes.js
-│   │   │   └── ReservaRoutes.js
-│   │   └── app.js
-│   ├── package.json
-│   └── server.js
-├── .env.example
-├── .gitignore
-└── README.md
-```
+git clone [https://github.com/seu-usuario/Sistema-de-Reserva-de-Mesas-MMTech.git](https://github.com/seu-usuario/Sistema-de-Reserva-de-Mesas-MMTech.git)
+cd Sistema-de-Reserva-de-Mesas-MMTech
+````
 
----
+### 2\. Configurar o Backend
 
-## Tecnologias
+1.  **Navegue até à pasta do backend e instale as dependências:**
 
-- Node.js  
-- Express  
-- PostgreSQL  
-- pg  
-- dotenv  
-- cors  
-- nodemon  
+    ```bash
+    cd backend
+    npm install
+    ```
 
----
+2.  **Configure o Banco de Dados PostgreSQL:**
 
-## Banco de Dados (tabelas)
+      - Certifique-se de que o seu serviço do PostgreSQL está a ser executado.
+      - Crie uma base de dados. Ex: `mmtech_reservas`.
+      - Execute os seguintes scripts SQL para criar as tabelas necessárias:
+        ```sql
+        CREATE TABLE mesas (
+            id SERIAL PRIMARY KEY,
+            capacidade INTEGER NOT NULL,
+            status VARCHAR(50) DEFAULT 'disponível' NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
 
-```sql
-CREATE TABLE mesas (
-    id SERIAL PRIMARY KEY,
-    capacidade INTEGER NOT NULL,
-    status VARCHAR(50) DEFAULT 'disponível' NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+        CREATE TABLE reservas (
+            id SERIAL PRIMARY KEY,
+            mesa_id INTEGER NOT NULL,
+            finalidade VARCHAR(255) NOT NULL,
+            data_hora_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
+            data_hora_fim TIMESTAMP WITH TIME ZONE,
+            check_in_at TIMESTAMP WITH TIME ZONE,
+            check_out_at TIMESTAMP WITH TIME ZONE,
+            membro VARCHAR(255) NOT NULL,
+            CONSTRAINT fk_mesa FOREIGN KEY(mesa_id) REFERENCES mesas(id)
+        );
+        ```
 
-CREATE TABLE reservas (
-    id SERIAL PRIMARY KEY,
-    mesa_id INTEGER NOT NULL,
-    finalidade VARCHAR(255) NOT NULL,
-    data_hora_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
-    data_hora_fim TIMESTAMP WITH TIME ZONE,
-    check_in_at TIMESTAMP WITH TIME ZONE,
-    check_out_at TIMESTAMP WITH TIME ZONE,
-    membro VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_mesa FOREIGN KEY(mesa_id) REFERENCES mesas(id)
-);
-```
+3.  **Configure as Variáveis de Ambiente:**
 
----
+      - Na pasta `backend`, crie um ficheiro chamado `.env`.
+      - Copie o conteúdo abaixo para o ficheiro `.env` e substitua os valores pelos da sua configuração do PostgreSQL.
+        ```env
+        # Configuração do Servidor
+        PORT=3000
 
-## 🖥 Como rodar localmente
+        # Configuração do Banco de Dados PostgreSQL
+        DB_HOST=localhost
+        DB_PORT=5432
+        DB_NAME=seu_banco_de_dados # Ex: mmtech_reservas
+        DB_USER=seu_usuario_postgres
+        DB_PASSWORD=sua_senha_postgres
+        ```
 
-1. **Clonar o repositório**  
-```bash
-git clone https://github.com/SEU_USUARIO/Gerenciamento-de-mesas-MMTech.git
-cd Gerenciamento-de-mesas-MMTech/backend
-```
+4.  **Execute o servidor do backend:**
 
-2. **Instalar dependências**  
-```bash
-npm install
-```
+    ```bash
+    npm run dev
+    ```
 
-3. **Configurar variáveis de ambiente**  
-Crie o arquivo `.env` na pasta `backend` (baseado no `.env.example`):  
-```env
-PORT=3000
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=sua_senha
-```
+      - O servidor estará a ser executado em `http://localhost:3000`.
 
-4. **Criar tabelas no PostgreSQL**  
-Execute no banco as queries do tópico [Banco de Dados](#-banco-de-dados-tabelas).
+### 3\. Configurar o Frontend
 
-5. **Iniciar o servidor**  
-```bash
-npm run dev
-```
+1.  **Abra um novo terminal.** Navegue até à pasta do frontend e instale as dependências:
 
-6. **Acessar servidor**  
-[http://localhost:3000](http://localhost:3000)
+    ```bash
+    cd frontend
+    npm install
+    ```
 
----
+2.  **Execute a aplicação frontend:**
 
-## Rotas rápidas (cheat sheet)
+    ```bash
+    npm run dev
+    ```
 
-- `POST /api/mesas`  
-- `GET /api/mesas`  
-- `GET /api/reservas/disponiveis`
-- `POST /api/reservas/reservar`  
-- `POST /api/reservas/check_in/:reserva_id`  
-- `POST /api/reservas/check_out/:reserva_id`  
-- `GET /` (teste do servidor)
+      - A aplicação React estará disponível no endereço fornecido pelo Vite (geralmente `http://localhost:5173`).
 
----
+### 4\. Testar a Aplicação
 
-## Observações
+1.  Abra `http://localhost:5173` (ou o endereço do frontend) no seu navegador.
+2.  Para que as mesas apareçam, primeiro precisa de as registar. Utilize uma ferramenta como o [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) para fazer um `POST` para o endpoint do backend:
+      - **URL**: `http://localhost:3000/api/mesas`
+      - **Body** (raw, JSON):
+        ```json
+        {
+          "capacidade": 4
+        }
+        ```
+      - Crie algumas mesas com diferentes capacidades.
+3.  Atualize a página do frontend. As mesas que criou devem aparecer como disponíveis.
+4.  Clique no botão "Reservar" de uma mesa, preencha o formulário e confirme a reserva.
+5.  A mesa reservada deverá desaparecer da lista de mesas disponíveis, confirmando que o fluxo está a funcionar\!
 
-- O arquivo `.env.example` serve apenas como modelo, não é lido pelo Node.  
-- A rota de teste é a raiz `/` (não existe `/api/teste`).  
-- As tabelas precisam estar criadas antes de usar as rotas de reserva.  
+<!-- end list -->
