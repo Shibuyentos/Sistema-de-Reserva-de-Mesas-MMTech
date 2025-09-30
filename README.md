@@ -20,10 +20,10 @@ Permite cadastrar mesas, solicitar reservas, consultar disponibilidade e registr
 - **Rota:** `GET /api/mesas`
 
 ### Consulta de disponibilidade
-- **Descrição:** Lista mesas disponíveis entre um início e um fim.  
+- **Descrição:** Lista mesas disponíveis
 - **Rota:**  
 ```
-GET /api/reservas/disponiveis?inicio=2025-09-28T10:00:00Z&fim=2025-09-28T12:00:00Z
+GET /api/reservas/disponiveis
 ```
 
 ### Solicitação de reserva
@@ -156,7 +156,7 @@ npm run dev
 
 - `POST /api/mesas`  
 - `GET /api/mesas`  
-- `GET /api/reservas/disponiveis?inicio=ISO&fim=ISO`  
+- `GET /api/reservas/disponiveis`
 - `POST /api/reservas/reservar`  
 - `POST /api/reservas/check_in/:reserva_id`  
 - `POST /api/reservas/check_out/:reserva_id`  
