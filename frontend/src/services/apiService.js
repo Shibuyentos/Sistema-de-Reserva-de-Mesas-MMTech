@@ -1,3 +1,4 @@
+// frontend/src/services/apiService.js
 import axios from 'axios';
 
 const apiClient = axios.create({
@@ -10,4 +11,8 @@ export const getMesasDisponiveis = () => {
 
 export const criarReserva = (dadosDaReserva) => {
   return apiClient.post('/reservas/reservar', dadosDaReserva);
+};
+
+export const getHistoricoDeReservas = () => {
+  return apiClient.get('/relatorios/historico-reservas');
 };
