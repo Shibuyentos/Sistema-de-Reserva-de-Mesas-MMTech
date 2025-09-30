@@ -146,25 +146,62 @@ class ReservaController {
         }
     }
 
-        async CheckOut(req, res) {
-        const reserva_id = Number(req.params.reserva_id)
-        const QueryUpdate = 'UPDATE  reservas SET check_out_at = CURRENT_TIMESTAMP WHERE id = $1'
-        const result = await pool.query(QueryUpdate, [reserva_id]);
+    async CheckOut(req, res) {
+        // Pega o ID da reserva a partir dos parâmetros da URL.
+        const { reserva_id } = req.params;
 
-        try{
-            await pool.query(QueryUpdate, [reserva_id]);
-            res
-                .status(201)
-                .json({
-                    success: true,
-                    messagem: 'Check_out efetuado com sucesso. Até a proxima!',
-                    reserva: result.rows[0],
-                })
+        // Verifica se o ID da reserva foi fornecido.
+        if (!reserva_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'O ID da reserva é obrigatório.'
+            });
+        }
+
+        try {
+
+            await pool.query('BEGIN');
+
+            const updateReservaQuery = `
+                UPDATE reservas 
+                SET check_out_at = CURRENT_TIMESTAMP 
+                WHERE id = $1 AND check_out_at IS NULL
+                RETURNING mesa_id;
+            `;
+            const resultReserva = await pool.query(updateReservaQuery, [reserva_id]);
+
+
+            if (resultReserva.rows.length === 0) {
+
+                await pool.query('ROLLBACK'); 
+                return res.status(404).json({
+                    success: false,
+                    message: 'Reserva não encontrada ou já finalizada.'
+                });
+            }
+
+
+            const mesaId = resultReserva.rows[0].mesa_id;
+
+  
+            const updateMesaQuery = "UPDATE mesas SET status = 'disponível' WHERE id = $1";
+            await pool.query(updateMesaQuery, [mesaId]);
+
+
+            await pool.query('COMMIT');
+
+            res.status(200).json({
+                success: true,
+                message: 'Check-out efetuado com sucesso. A mesa foi liberada!',
+            });
 
         } catch (error) {
+
+            await pool.query('ROLLBACK');
+            
             res.status(500).json({
                 success: false,
-                message: 'Erro ao realizar o check_out',
+                message: 'Erro ao realizar o check-out.',
                 error: error.message
             });
         }
