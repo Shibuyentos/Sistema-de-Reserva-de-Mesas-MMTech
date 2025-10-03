@@ -2,15 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { getMesasDisponiveis } from '../services/apiService';
 import CardMesa from '../components/CardMesa';
-import ModalReserva from '../components/ModalReserva'; 
-
-// Criamos uma classe CSS para o container das mesas
-const mesasListStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  gap: '1rem',
-};
+import ModalReserva from '../components/ModalReserva';
+import './HomePage.css';
 
 function HomePage() {
   const [mesas, setMesas] = useState([]);
@@ -39,29 +32,29 @@ function HomePage() {
     setModalVisivel(false);
     setMesaSelecionada(null);
   };
-  
+
   const handleReservaSucesso = () => {
-    handleFecharModal(); 
-    buscarMesas(); 
-  }
-  
+    handleFecharModal();
+    buscarMesas();
+  };
+
   return (
-    <div>
+    <div className="homepage-container">
       <h1>Mesas Disponíveis</h1>
-      {/* Aplicamos o estilo diretamente aqui, pois é um estilo de layout simples para esta página */}
-      <div style={mesasListStyle}>
+
+      <div className="mesas-list">
         {mesas.map(mesa => (
-          <CardMesa 
-            key={mesa.id} 
-            mesa={mesa} 
-            onReservarClick={handleAbrirModal} 
+          <CardMesa
+            key={mesa.id}
+            mesa={mesa}
+            onReservarClick={handleAbrirModal}
           />
         ))}
       </div>
-      
+
       {modalVisivel && (
-        <ModalReserva 
-          mesa={mesaSelecionada} 
+        <ModalReserva
+          mesa={mesaSelecionada}
           onClose={handleFecharModal}
           onReservaSucesso={handleReservaSucesso}
         />

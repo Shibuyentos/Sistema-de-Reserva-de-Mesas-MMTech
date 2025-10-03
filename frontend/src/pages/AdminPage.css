@@ -4,42 +4,44 @@
   background-color: var(--cor-superficie);
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  border: 1px solid var(--cor-borda);
 }
 
 .report-table {
   width: 100%;
   margin-top: 20px;
-  border-collapse: collapse; /* Une as bordas das células */
+  border-collapse: collapse; 
 }
 
 .report-table th,
 .report-table td {
   border: 1px solid var(--cor-borda);
-  padding: 12px 15px; /* Mais espaçamento interno */
+  padding: 12px 15px; 
   text-align: left;
 }
 
 .report-table th {
-  background-color: #2c2c2c; /* Um cinza um pouco mais escuro para o cabeçalho */
-  color: var(--cor-acento);
+  background-color: #e9ecef; 
+  color: var(--cor-primaria);
   font-weight: 600;
 }
 
 .report-table tbody tr:nth-child(even) {
-  background-color: #242424; /* Linhas alternadas para melhor leitura */
+  background-color: transparent;
 }
 
 .report-table tbody tr:hover {
-  background-color: #333; /* Destaque ao passar o rato */
+  background-color: #f1f3f5; 
 }
 
 .loading-message,
 .error-message {
   font-size: 1.2em;
   margin-top: 2rem;
+  color: var(--cor-texto-secundario); 
 }
 
 .error-message {
-  color: #ff6b6b; /* Cor para mensagens de erro */
+  color: #d9534f; 
 }

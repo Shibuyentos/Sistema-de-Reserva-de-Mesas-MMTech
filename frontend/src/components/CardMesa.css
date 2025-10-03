@@ -8,19 +8,19 @@
   margin: 12px;
   width: 220px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .card-mesa:hover {
-  transform: translateY(-5px); /* Efeito de elevação ao passar o rato */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-5px); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .card-mesa h3 {
   margin-top: 0;
   font-size: 1.5em;
-  color: var(--cor-texto); /* Damos mais destaque ao número da mesa */
+  color: var(--cor-texto); 
 }
 
 .card-mesa p {
@@ -28,7 +28,6 @@
   margin-bottom: 20px;
 }
 
-/* O botão dentro do card herda o estilo global, o que já é ótimo! */
 .card-mesa button {
   width: 100%;
 }

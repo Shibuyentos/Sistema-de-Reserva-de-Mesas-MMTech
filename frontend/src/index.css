@@ -1,19 +1,17 @@
 /* frontend/src/index.css */
 
-/* Aqui definimos as variáveis de cor com base no PDF. 
-  Usar variáveis torna muito fácil alterar o tema da aplicação no futuro.
-*/
+/* frontend/src/index.css */
+
 :root {
-  --cor-primaria: #6f42c1; /* Roxo principal dos títulos */
-  --cor-acento: #03dac6;    /* Verde/Ciano para destaques */
-  --cor-fundo: #121212;     /* Fundo escuro, um pouco mais suave que o preto puro */
-  --cor-superficie: #1e1e1e;/* Cor de fundo para cards e modais */
-  --cor-texto: #e0e0e0;     /* Cor de texto principal, branco suave */
-  --cor-texto-secundario: #a0a0a0; /* Cor para textos de menor importância */
-  --cor-borda: #2c2c2c;
+  --cor-primaria: #6f42c1;
+  --cor-acento: #03dac6;          
+  --cor-fundo: #f8f9fa;            
+  --cor-superficie: #ffffff;       
+  --cor-texto: #212529;            
+  --cor-texto-secundario: #6c757d; 
+  --cor-borda: #dee2e6;            
 }
 
-/* Estilos de base para a aplicação */
 body {
   margin: 0;
   display: flex;
@@ -49,7 +47,9 @@ a:hover {
   color: #01a99a;
 }
 
-/* Estilo padrão para botões */
+/* DOCUMENTAÇÃO:
+  - O botão principal agora tem texto branco para contrastar com o fundo roxo.
+*/
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -58,7 +58,7 @@ button {
   font-weight: 500;
   font-family: inherit;
   background-color: var(--cor-primaria);
-  color: var(--cor-texto);
+  color: #ffffff; /* Garante que o texto do botão seja sempre claro */
   cursor: pointer;
   transition: background-color 0.25s, border-color 0.25s;
 }

@@ -6,7 +6,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,7 +19,7 @@
   border-radius: 12px;
   width: 450px;
   color: var(--cor-texto);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--cor-borda);
 }
 
@@ -43,14 +43,12 @@
   padding: 10px;
   border-radius: 6px;
   border: 1px solid var(--cor-borda);
-  background-color: #2c2c2c;
-  color: var(--cor-texto);
+  background-color: #fff; 
+  color: var(--cor-texto); 
   font-size: 1em;
 }
 
-/* Melhora a aparência do seletor de data e hora */
 .form-group input[type="datetime-local"] {
-  color-scheme: dark;
 }
 
 .button-container {
@@ -60,14 +58,15 @@
   margin-top: 20px;
 }
 
-/* Botão secundário para cancelar */
+
 .button-container .btn-secondary {
   background-color: transparent;
-  border: 1px solid var(--cor-texto-secundario);
+  border: 1px solid var(--cor-borda);
   color: var(--cor-texto-secundario);
 }
 
 .button-container .btn-secondary:hover {
-  background-color: var(--cor-borda);
-  border-color: var(--cor-texto);
+  background-color: #e9ecef;
+  border-color: var(--cor-borda);
+  color: var(--cor-texto);
 }
