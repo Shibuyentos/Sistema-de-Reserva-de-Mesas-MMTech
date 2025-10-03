@@ -1,22 +1,14 @@
 // frontend/src/App.jsx
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import AdminPage from './pages/AdminPage'; // Importar a nova página
+import AdminPage from './pages/AdminPage';
 import './App.css';
-
-const navStyle = {
-    padding: '1rem',
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1rem',
-    backgroundColor: '#1a1a1a',
-    marginBottom: '2rem'
-};
 
 function App() {
   return (
     <BrowserRouter>
-      <nav style={navStyle}>
+      {/* Removemos o 'style' e adicionámos um 'className' para usar o App.css */}
+      <nav className="navbar">
         <Link to="/">Página Inicial</Link>
         <Link to="/admin">Página de Admin</Link>
       </nav>
