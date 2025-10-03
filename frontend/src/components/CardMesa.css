@@ -1,0 +1,34 @@
+/* frontend/src/components/CardMesa.css */
+
+.card-mesa {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 12px;
+  width: 220px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-mesa:hover {
+  transform: translateY(-5px); /* Efeito de elevação ao passar o rato */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.card-mesa h3 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: var(--cor-texto); /* Damos mais destaque ao número da mesa */
+}
+
+.card-mesa p {
+  color: var(--cor-texto-secundario);
+  margin-bottom: 20px;
+}
+
+/* O botão dentro do card herda o estilo global, o que já é ótimo! */
+.card-mesa button {
+  width: 100%;
+}
