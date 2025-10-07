@@ -1,19 +1,17 @@
 // frontend/src/components/CardMesa.jsx
 import React from 'react';
 import './CardMesa.css';
-import TooltipReserva from './TooltipReserva'; // Importamos nosso novo componente
+import TooltipReserva from './TooltipReserva';
 import tableIcon from '../assets/table-icon.png';
 
 function CardMesa({ mesa, onReservarClick }) {
   const isOcupada = mesa.status === 'ocupada';
 
   return (
-    // Adicionamos a classe 'ocupada' condicionalmente
     <div 
       className={`card-mesa ${isOcupada ? 'ocupada' : ''}`} 
       onClick={() => onReservarClick(mesa)}
     >
-      {/* O tooltip só é renderizado se a mesa estiver ocupada */}
       {isOcupada && <TooltipReserva reserva={mesa.reserva_atual} />}
       
       <div className="card-mesa-icon">

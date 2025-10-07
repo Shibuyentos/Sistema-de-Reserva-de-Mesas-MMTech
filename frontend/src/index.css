@@ -4,13 +4,14 @@
 :root {
   --cor-fundo: #FFFFFF;
   --cor-superficie: #FFFFFF;
-  --cor-primaria: #8a2be2; /* Roxo vibrante */
-  --cor-secundaria: #007BFF; /* Azul vibrante */
+  --cor-primaria: #8a2be2;
+  --cor-secundaria: #007BFF;
   --gradiente-principal: linear-gradient(90deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
   --cor-texto: #1F2937;
   --cor-texto-secundario: #6B7280;
   --cor-borda: #E5E7EB;
   --sombra-sutil: 0 4px 12px rgba(0, 0, 0, 0.08);
+   --cor-erro: #EF4444;
 }
 
 body {

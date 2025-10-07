@@ -2,7 +2,6 @@
 import React from 'react';
 import './TooltipReserva.css';
 
-// Função para formatar a data e hora de forma amigável
 const formatarData = (dataISO) => {
   if (!dataISO) return 'N/A';
   const options = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' };

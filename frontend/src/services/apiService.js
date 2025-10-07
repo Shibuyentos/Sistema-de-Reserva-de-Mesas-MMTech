@@ -5,7 +5,6 @@ const apiClient = axios.create({
   baseURL: 'http://localhost:3000/api', 
 });
 
-// Função antiga (pode manter ou remover)
 export const getMesasDisponiveis = () => {
   return apiClient.get('/reservas/disponiveis');
 };

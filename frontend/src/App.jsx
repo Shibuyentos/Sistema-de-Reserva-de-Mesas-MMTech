@@ -1,7 +1,7 @@
 // frontend/src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Header from './components/Header'; // Importamos o Header
-import Footer from './components/Footer'; // Importamos o Footer
+import Header from './components/Header';
+import Footer from './components/Footer'; 
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import './App.css';
