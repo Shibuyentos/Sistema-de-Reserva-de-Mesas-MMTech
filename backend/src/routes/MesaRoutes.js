@@ -12,4 +12,5 @@ router.post('/', MesaController.registrarMesa);
 // Acessada via: GET http://localhost:3000/api/mesas
 router.get('/', MesaController.listarMesas);
 
+
 module.exports = router;

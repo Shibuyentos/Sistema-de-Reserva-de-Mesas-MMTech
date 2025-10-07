@@ -2,11 +2,9 @@
 const pool = require('../config/database');
 
 class MesaController {
-    async registrarMesa(req, res) { // Método/Função
-        // 'req.body' é onde chegam os dados enviados numa requisição POST.
-        const { capacidade } = req.body; // = const capacidade = req.body.capacidade;
+    async registrarMesa(req, res) {
+        const { capacidade } = req.body;
 
-        // Validação simples: a capacidade foi enviada? É um número válido?
         if (!capacidade || typeof capacidade !== 'number' || capacidade <= 0) { 
             return res.status(400).json({ 
                 success: false, 
@@ -35,15 +33,47 @@ class MesaController {
         }
     }
 
-    //Lista todas as mesas cadastradas no banco de dados.
-    async listarMesas(req, res) { //Método/Função
+    async listarMesas(req, res) {
         try {
-            const query = 'SELECT * FROM mesas ORDER BY id ASC';
+            const query = `
+                SELECT 
+                    m.id,
+                    m.capacidade,
+                    m.status,
+                    r.membro,
+                    r.finalidade,
+                    r.data_hora_inicio,
+                    r.data_hora_fim
+                FROM 
+                    mesas m
+                LEFT JOIN 
+                    reservas r ON m.id = r.mesa_id AND r.check_out_at IS NULL
+                ORDER BY 
+                    m.id ASC
+            `;
             const result = await pool.query(query);
+
+            // Agora, formatamos a resposta para o frontend
+            const mesasFormatadas = result.rows.map(mesa => {
+                const isOcupada = mesa.status === 'indisponível' && mesa.membro != null;
+
+                return {
+                    id: mesa.id,
+                    capacidade: mesa.capacidade,
+                    // Convertemos o status do backend para o que o frontend espera
+                    status: isOcupada ? 'ocupada' : 'disponivel',
+                    reserva_atual: isOcupada ? {
+                        membro: mesa.membro,
+                        finalidade: mesa.finalidade,
+                        data_hora_inicio: mesa.data_hora_inicio,
+                        data_hora_fim: mesa.data_hora_fim,
+                    } : null
+                };
+            });
 
             res.status(200).json({
                 success: true,
-                mesas: result.rows
+                mesas: mesasFormatadas // Enviamos o novo array formatado
             });
 
         } catch (error) {

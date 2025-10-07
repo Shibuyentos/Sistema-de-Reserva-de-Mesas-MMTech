@@ -7,27 +7,60 @@
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: var(--sombra-sutil);
-  cursor: pointer;
   
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px; 
+  gap: 16px;
+  position: relative; /* ESSENCIAL para o posicionamento do tooltip */
 }
 
-.card-mesa:hover {
+/* Efeito hover para mesas DISPONÍVEIS */
+.card-mesa:not(.ocupada):hover {
   transform: translateY(-8px);
   border-color: var(--cor-primaria);
+  cursor: pointer;
 }
 
+/* ======================================================================== */
+/* ESTILOS PARA MESA OCUPADA 👇 */
+/* ======================================================================== */
+.card-mesa.ocupada {
+  /* Deixa o card com aparência de "desabilitado" */
+  background-color: #f8f9fa; /* Um cinza bem clarinho */
+  filter: grayscale(80%);
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+/* Botão da mesa ocupada */
+.card-mesa.ocupada .btn-gradient {
+  background: #e9ecef; /* Cinza claro */
+  color: #adb5bd; /* Texto cinza */
+  box-shadow: none;
+  pointer-events: none; /* Desativa eventos de clique */
+}
+
+/* ======================================================================== */
+/* LÓGICA DE EXIBIÇÃO DO TOOLTIP 👇 */
+/* ======================================================================== */
+/* Quando o mouse passa por cima de um card OCUPADO, o tooltip aparece */
+.card-mesa.ocupada:hover .tooltip-container {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -10px); /* Efeito de "subir" suave */
+}
+
+
 .card-mesa-icon .table-icon-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
 
-  width: 100px; 
-  height: 100px;
-
-  object-fit: contain; 
-
+/* Ajuste no filtro para não afetar o estilo do card ocupado */
+.card-mesa:not(.ocupada) .table-icon-img {
   filter: grayscale(100%) brightness(50%);
 }
 

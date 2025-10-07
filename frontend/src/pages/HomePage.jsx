@@ -1,6 +1,6 @@
 // frontend/src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
-import { getMesasDisponiveis } from '../services/apiService';
+import { getTodasAsMesas } from '../services/apiService';
 import CardMesa from '../components/CardMesa';
 import ModalReserva from '../components/ModalReserva';
 import './HomePage.css';
@@ -12,10 +12,10 @@ function HomePage() {
 
   const buscarMesas = async () => {
     try {
-      const response = await getMesasDisponiveis();
-      setMesas(response.data.mesas_disponiveis);
+      const response = await getTodasAsMesas();
+      setMesas(response.data.mesas); 
     } catch (error) {
-      console.error('Erro ao buscar mesas disponíveis:', error);
+      console.error('Erro ao buscar todas as mesas:', error);
     }
   };
 
@@ -24,8 +24,10 @@ function HomePage() {
   }, []);
 
   const handleAbrirModal = (mesa) => {
-    setMesaSelecionada(mesa);
-    setModalVisivel(true);
+    if (mesa.status === 'disponivel') {
+      setMesaSelecionada(mesa);
+      setModalVisivel(true);
+    }
   };
 
   const handleFecharModal = () => {
@@ -47,16 +49,15 @@ function HomePage() {
 
       <div className="mesas-list">
         {mesas.length > 0 ? (
-          mesas.map((mesa, index) => (
+          mesas.map((mesa) => (
             <CardMesa
               key={mesa.id}
               mesa={mesa}
               onReservarClick={handleAbrirModal}
-              style={{ animationDelay: `${index * 100}ms` }}
             />
           ))
         ) : (
-          <p>Nenhuma mesa disponível no momento.</p>
+          <p>Nenhuma mesa encontrada.</p>
         )}
       </div>
 
