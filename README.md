@@ -1,163 +1,167 @@
-# Sistema de Reserva de Mesas MMTech 🚀
+# Sistema de Reserva de Mesas - MMTech Coworking
 
-Um sistema web full-stack para a gestão e reserva de mesas em espaços de coworking, desenvolvido com Node.js, Express, PostgreSQL e React.
-
-##  Descrição
-
-Este projeto permite que membros de um espaço de coworking visualizem e reservem mesas para períodos específicos. Adicionalmente, oferece uma área administrativa para o rastreamento do histórico de reservas. A aplicação foi concebida com uma arquitetura cliente-servidor, comunicando através de uma API RESTful.
-
-Este projeto cumpre os seguintes requisitos do documento de teste:
-- **Funcionais:** Registro de Mesas (backend), Reservas de Mesas (frontend/backend), Check-in/Check-out (backend) e Rastreamento/Relatórios (frontend/backend).
-- **Não Funcionais:** Usabilidade, Manutenção e Escalabilidade e Relatórios para Auditoria.
-
-##  Funcionalidades
-
-- **Backend (API RESTful)**
-  - `[✅]` Endpoints para CRUD de Mesas e Reservas.
-  - `[✅]` Sistema de reserva com verificação de conflitos de horário.
-  - `[✅]` Endpoints para Check-in e Check-out.
-  - `[✅]` Endpoint para gerar relatórios de histórico de reservas.
-
-- **Frontend (React App)**
-  - `[✅]` Interface reativa com React 18 e Vite.
-  - `[✅]` Navegação entre páginas com `react-router-dom`.
-  - `[✅]` Visualização de mesas disponíveis em tempo real.
-  - `[✅]` Modal para realizar novas reservas.
-  - `[✅]` Página de administração para visualizar o histórico completo de reservas.
-
-##  Tecnologias Utilizadas
-
-| Componente | Tecnologias Principais                                |
-|------------|--------------------------------------------------------|
-| **Backend**| Node.js, Express, PostgreSQL, pg, cors, dotenv         |
-| **Frontend**| React 18, Vite, React Router, Axios                    |
-| **Gestão** | Git, GitHub, NPM                                       |
-
-##  Guia de Instalação e Execução
-
-Siga os passos abaixo para configurar e executar o projeto localmente.
-
-### Pré-requisitos
-
-Antes de começar, certifique-se de que tem as seguintes ferramentas instaladas:
-- [Node.js](https://nodejs.org/en/) (versão LTS recomendada)
-- [NPM](https://www.npmjs.com/) (geralmente instalado com o Node.js)
-- [PostgreSQL](https://www.postgresql.org/download/)
+![Logo da MMTech](frontend/src/assets/logo.png)
 
 ---
 
-### 1. Clonar o Repositório
+## ✨ Funcionalidades Principais
 
-```bash
-git clone https://github.com/Shibuyentos/Sistema-de-Reserva-de-Mesas-MMTech.git
-cd Sistema-de-Reserva-de-Mesas-MMTech
-```
+-   **Visualização de Mesas:** Interface principal que exibe todas as mesas com o seu status em tempo real (Disponível / Ocupada).
+-   **Sistema de Autenticação Completo:**
+    -   Registo e Login de utilizadores com senhas encriptadas.
+    -   Autenticação baseada em tokens JWT (JSON Web Tokens) para segurança.
+    -   Distinção de perfis: `membro` e `admin`.
+-   **Reserva de Mesas:** Membros autenticados podem reservar mesas disponíveis através de um modal intuitivo.
+-   **Portal do Membro ("Minhas Reservas"):**
+    -   Página dedicada onde os membros podem ver o seu histórico de reservas.
+    -   Funcionalidade de **Check-in** e **Check-out** gerida pelo próprio utilizador.
+-   **Painel de Administração:**
+    -   Página protegida e acessível apenas por administradores.
+    -   Visualização completa do histórico de todas as reservas.
+    -   Ferramentas para registar novas mesas e gerir o check-in/check-out de qualquer reserva.
+-   **Interface Moderna e Responsiva:** Foco em UX/UI, com animações suaves, tooltips informativos e um design que se adapta a diferentes tamanhos de ecrã.
 
-### 2. Configurar o Backend
+---
 
-Navegue até à pasta do backend e instale as dependências:
+## 🛠️ Tecnologias Utilizadas
 
-```bash
-cd backend
-npm install
-```
+#### **Backend**
 
-Configure a Base de Dados PostgreSQL:
+-   **Node.js**
+-   **Express.js**
+-   **PostgreSQL** (com a biblioteca `pg`)
+-   **JWT (JSON Web Token)** para autenticação
+-   **Bcrypt.js** para encriptação de senhas
+-   **Dotenv** para gestão de variáveis de ambiente
 
-Certifique-se de que o seu serviço do PostgreSQL está em execução.
+#### **Frontend**
 
-Crie um utilizador e uma base de dados para o projeto. Para desenvolvimento, é comum usar a base de dados padrão postgres que já vem criada. As instruções abaixo assumem que você usará a base de dados postgres.
+-   **React** (com Vite)
+-   **React Router** para gestão de rotas
+-   **React Context API** para gestão de estado global (autenticação)
+-   **Axios** para as requisições à API
+-   **React Feather** para os ícones
+-   **CSS3** com Variáveis para estilização
 
-Execute o seguinte script SQL na sua base de dados para criar as tabelas necessárias:
+---
+
+## 🚀 Como Executar o Projeto Localmente
+
+[cite_start]Siga os passos abaixo para configurar e executar o projeto no seu ambiente de desenvolvimento. [cite: 10]
+
+### Pré-requisitos
+
+-   **Node.js** (versão 18 ou superior)
+-   **npm** (geralmente instalado com o Node.js)
+-   **PostgreSQL** instalado e a rodar na sua máquina.
+
+### 1. Configuração da Base de Dados
+
+Antes de iniciar o backend, crie uma base de dados no PostgreSQL e execute as seguintes queries para criar as tabelas necessárias:
 
 ```sql
-CREATE TABLE mesas (
+-- Tabela para os utilizadores
+CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
-    capacidade INTEGER NOT NULL,
-    status VARCHAR(50) DEFAULT 'disponível' NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    perfil VARCHAR(20) DEFAULT 'membro' NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Tabela para as mesas
+CREATE TABLE mesas (
+    id SERIAL PRIMARY KEY,
+    capacidade INTEGER NOT NULL,
+    status VARCHAR(20) DEFAULT 'disponível' NOT NULL
+);
+
+-- Tabela para as reservas
 CREATE TABLE reservas (
     id SERIAL PRIMARY KEY,
-    mesa_id INTEGER NOT NULL,
-    finalidade VARCHAR(255) NOT NULL,
+    mesa_id INTEGER NOT NULL REFERENCES mesas(id),
+    membro VARCHAR(100) NOT NULL,
+    finalidade VARCHAR(255),
     data_hora_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
-    data_hora_fim TIMESTAMP WITH TIME ZONE,
+    data_hora_fim TIMESTAMP WITH TIME ZONE NOT NULL,
     check_in_at TIMESTAMP WITH TIME ZONE,
     check_out_at TIMESTAMP WITH TIME ZONE,
-    membro VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_mesa FOREIGN KEY(mesa_id) REFERENCES mesas(id)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
-Configure as Variáveis de Ambiente:
+### 2. Configuração do Backend
 
-Na pasta backend, crie um ficheiro chamado `.env`.
+```bash
+# 1. Navegue para a pasta do backend
+cd backend
 
-Copie o conteúdo abaixo para o `.env` e substitua os valores pelos da sua configuração local do PostgreSQL.
-
-```env
-# Configuração do Servidor
-PORT=3000
-
-# Configuração da Base de Dados PostgreSQL
+# 2. Crie um ficheiro .env na raiz da pasta 'backend' e adicione as suas variáveis de ambiente:
+# Exemplo de .env:
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=postgres # Ou o nome da base de dados que você criou
-DB_USER=seu_usuario_postgres
-DB_PASSWORD=sua_senha_postgres
-```
+DB_NAME=seu_banco_de_dados
+DB_USER=seu_utilizador
+DB_PASSWORD=sua_senha
+JWT_SECRET=um_segredo_muito_forte_para_o_jwt
 
-Execute o servidor do backend:
-
-```bash
-npm run dev
-```
-
-O servidor estará em execução em http://localhost:3000.
-
-### 3. Configurar o Frontend
-
-Abra um novo terminal. Navegue até à pasta do frontend e instale as dependências:
-
-```bash
-cd frontend
+# 3. Instale as dependências
 npm install
+
+# 4. Inicie o servidor de desenvolvimento
+npm run dev
+
+# O servidor backend estará a rodar em http://localhost:3000
 ```
 
-(Este comando instalará as versões corretas e estáveis das bibliotecas, incluindo o React 18, conforme definido no package.json).
-
-Execute a aplicação frontend:
+### 3. Configuração do Frontend
 
 ```bash
+# 1. A partir da raiz do projeto, navegue para a pasta do frontend
+cd frontend
+
+# 2. Instale as dependências
+npm install
+
+# 3. Inicie a aplicação de desenvolvimento
 npm run dev
+
+# A aplicação frontend estará acessível em http://localhost:5173 (ou outra porta indicada pelo Vite)
 ```
 
-A aplicação React estará disponível no endereço fornecido pelo Vite (geralmente http://localhost:5173).
+---
 
-### 4. Utilização e Testes
+## 🏛️ Diagramas e Arquitetura
 
-**Adicionar Mesas (Obrigatório):**
+[cite_start]Conforme solicitado, aqui estão as descrições da arquitetura e do modelo de dados. [cite: 45]
 
-Para que a aplicação mostre mesas disponíveis, primeiro precisa de as registar. Utilize uma ferramenta de API como o Postman ou o Thunder Client (extensão do VS Code).
+### Arquitetura do Sistema
 
-Crie uma requisição POST para o endpoint: http://localhost:3000/api/mesas
+O sistema segue uma **arquitetura Cliente-Servidor** desacoplada:
 
-No corpo ("Body") da requisição, envie um JSON como este:
+-   **Cliente (Frontend):** Uma Single-Page Application (SPA) construída em **React**. É responsável por toda a interface do utilizador, pela gestão do estado da UI e pela comunicação com o backend.
+-   **Servidor (Backend):** Uma API RESTful construída em **Node.js/Express**. É responsável por toda a lógica de negócio, interações com a base de dados e pela segurança/autenticação.
+-   **Base de Dados:** Um sistema **PostgreSQL** que armazena os dados de forma persistente.
+-   **Comunicação:** A comunicação entre o cliente e o servidor é feita através de requisições HTTP (GET, POST, PUT, etc.), com dados transacionados no formato JSON. A segurança das rotas é garantida por Tokens JWT enviados no header `Authorization`.
 
-```json
-{
-  "capacidade": 4
-}
-```
+### Modelo de Entidade e Relacionamento (MER)
 
-Crie algumas mesas com diferentes capacidades.
+[cite_start]O modelo de dados baseia-se em três entidades principais: [cite: 45]
 
-**Navegar na Aplicação:**
+-   `usuarios`: Armazena os dados dos membros e administradores.
+-   [cite_start]`mesas`: Armazena as informações de cada mesa do coworking. [cite: 15]
+-   [cite_start]`reservas`: Tabela central que conecta um `usuario` e uma `mesa` para um determinado período. [cite: 19]
 
-Aceda a http://localhost:5173 no seu navegador.
+**Relacionamentos:**
+-   Um `usuario` pode ter **várias** `reservas`.
+-   Uma `mesa` pode ter **várias** `reservas` (desde que os horários não se sobreponham).
+-   Cada `reserva` pertence a **um** `usuario` e a **uma** `mesa`.
 
-Na Página Inicial, as mesas que criou deverão aparecer. Clique em "Reservar" para criar uma nova reserva.
+---
 
-Navegue para a Página de Admin para ver o relatório com o histórico de todas as reservas feitas.
+
+**Kauann Shibuya**
+
+-   GitHub: [@Shibuyentos](https://github.com/Shibuyentos)
+-   *Este projeto foi desenvolvido com a assistência do Wesley Godoy.*
