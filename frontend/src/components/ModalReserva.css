@@ -76,3 +76,21 @@
   gap: 10px;
   margin-top: 20px;
 }
+
+.notification {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.notification.success {
+  background-color: #D1FAE5; /* Verde claro */
+  color: #065F46; /* Verde escuro */
+}
+
+.notification.error {
+  background-color: #FEE2E2; /* Vermelho claro */
+  color: #991B1B; /* Vermelho escuro */
+}

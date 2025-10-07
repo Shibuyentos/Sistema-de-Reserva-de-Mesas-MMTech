@@ -1,0 +1,98 @@
+/* frontend/src/pages/MyReservationsPage.css */
+.my-reservations-container {
+    text-align: center;
+}
+
+.my-reservations-container p {
+    color: var(--cor-texto-secundario);
+    margin-bottom: 3rem;
+}
+
+.reservations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.reservation-card {
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    box-shadow: var(--sombra-sutil);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.reservation-card.finalizada {
+    opacity: 0.7;
+    background-color: #f8f9fa;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.25em;
+}
+
+.card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+.card-body p {
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--cor-texto-secundario);
+}
+.card-body p strong {
+    color: var(--cor-texto);
+}
+
+.card-footer {
+    padding: 1rem 1.5rem;
+    background-color: #F9FAFB;
+    border-top: 1px solid var(--cor-borda);
+    border-radius: 0 0 12px 12px;
+}
+
+.btn-card-action {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-card-action.check-in {
+    background-color: #10B981;
+    color: white;
+}
+.btn-card-action.check-in:hover {
+    background-color: #059669;
+}
+
+.btn-card-action.check-out {
+    background-color: #EF4444;
+    color: white;
+}
+.btn-card-action.check-out:hover {
+    background-color: #DC2626;
+}
