@@ -1,16 +1,14 @@
 // backend/src/routes/MesaRoutes.js
 const express = require('express');
 const MesaController = require('../controllers/MesaController');
+const { proteger, isAdmin } = require('../middleware/authMiddleware'); // Importar
 
 const router = express.Router();
 
-// Rota para REGISTRAR uma nova mesa.
-// Acessada via: POST http://localhost:3000/api/mesas
-router.post('/', MesaController.registrarMesa);
+// A rota para REGISTRAR uma nova mesa agora é protegida
+router.post('/', proteger, isAdmin, MesaController.registrarMesa);
 
-// Rota para LISTAR todas as mesas.
-// Acessada via: GET http://localhost:3000/api/mesas
+// A rota para LISTAR todas as mesas continua pública
 router.get('/', MesaController.listarMesas);
-
 
 module.exports = router;
