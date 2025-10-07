@@ -1,5 +1,7 @@
 // frontend/src/App.jsx
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Header'; // Importamos o Header
+import Footer from './components/Footer'; // Importamos o Footer
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import './App.css';
@@ -7,15 +9,16 @@ import './App.css';
 function App() {
   return (
     <BrowserRouter>
-      <nav className="navbar">
-        <NavLink to="/">Página Inicial</NavLink>
-        <NavLink to="/admin">Página de Admin</NavLink>
-      </nav>
+      <Header />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin" element={<AdminPage />} />
-      </Routes>
+      <main className="container">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </main>
+
+      <Footer />
     </BrowserRouter>
   );
 }

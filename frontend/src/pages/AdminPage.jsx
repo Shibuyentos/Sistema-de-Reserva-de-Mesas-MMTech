@@ -1,7 +1,7 @@
 // frontend/src/pages/AdminPage.jsx
 import React, { useState, useEffect } from 'react';
 import { getHistoricoDeReservas } from '../services/apiService';
-import './AdminPage.css'; // Importamos o novo CSS
+import './AdminPage.css';
 
 function AdminPage() {
   const [reservas, setReservas] = useState([]);

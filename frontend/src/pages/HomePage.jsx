@@ -40,16 +40,24 @@ function HomePage() {
 
   return (
     <div className="homepage-container">
-      <h1>Mesas Disponíveis</h1>
+      <div className="hero-section">
+        <h1>Faça sua reserva na <span className="gradient-text">MMTech</span></h1>
+        <p>Escolha uma mesa abaixo e faça sua reserva de forma rápida e fácil.</p>
+      </div>
 
       <div className="mesas-list">
-        {mesas.map(mesa => (
-          <CardMesa
-            key={mesa.id}
-            mesa={mesa}
-            onReservarClick={handleAbrirModal}
-          />
-        ))}
+        {mesas.length > 0 ? (
+          mesas.map((mesa, index) => (
+            <CardMesa
+              key={mesa.id}
+              mesa={mesa}
+              onReservarClick={handleAbrirModal}
+              style={{ animationDelay: `${index * 100}ms` }}
+            />
+          ))
+        ) : (
+          <p>Nenhuma mesa disponível no momento.</p>
+        )}
       </div>
 
       {modalVisivel && (

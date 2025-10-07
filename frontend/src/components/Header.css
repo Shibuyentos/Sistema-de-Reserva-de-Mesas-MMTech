@@ -1,0 +1,89 @@
+/* frontend/src/components/Header.css */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  background-color: var(--cor-fundo);
+  border-bottom: 1px solid var(--cor-borda);
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+.logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.logo-img {
+  height: 40px;
+  border-radius: 8px;
+}
+
+.navbar-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.navbar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  color: var(--cor-texto-secundario);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--cor-primaria);
+}
+
+.nav-link.active {
+  color: var(--cor-primaria);
+  font-weight: 600;
+}
+
+.btn-nav-ghost {
+  padding: 0.6em 1.2em;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+  background-image: var(--gradiente-principal);
+  position: relative;
+  color: var(--cor-primaria);
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-nav-ghost::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  margin: -2px; 
+  border-radius: inherit; 
+  background: var(--gradiente-principal);
+}
+
+.btn-nav-ghost:hover {
+  background-image: none; 
+  background-color: transparent;
+  color: white;
+}
+
+.btn-nav-ghost:hover::before{
+    background: var(--gradiente-principal); 
+}

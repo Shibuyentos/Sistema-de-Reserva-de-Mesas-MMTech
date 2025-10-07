@@ -1,31 +1,40 @@
 /* frontend/src/components/CardMesa.css */
-
 .card-mesa {
   background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
   border-radius: 12px;
   padding: 24px;
-  margin: 12px;
-  width: 220px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  box-shadow: var(--sombra-sutil);
+  cursor: pointer;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; 
 }
 
 .card-mesa:hover {
-  transform: translateY(-5px); 
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  border-color: var(--cor-primaria);
 }
 
-.card-mesa h3 {
-  margin-top: 0;
-  font-size: 1.5em;
-  color: var(--cor-texto); 
+.card-mesa-icon .table-icon-img {
+
+  width: 100px; 
+  height: 100px;
+
+  object-fit: contain; 
+
+  filter: grayscale(100%) brightness(50%);
 }
 
 .card-mesa p {
   color: var(--cor-texto-secundario);
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 1em;
 }
 
 .card-mesa button {

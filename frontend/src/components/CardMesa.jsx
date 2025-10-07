@@ -1,16 +1,17 @@
 // frontend/src/components/CardMesa.jsx
 import React from 'react';
-import './CardMesa.css'; // Importamos a nossa nova folha de estilos
+import './CardMesa.css';
+import tableIcon from '../assets/table-icon.png'; // Verifique se o nome do arquivo corresponde ao que você salvou
 
-function CardMesa({ mesa, onReservarClick }) { 
-  // Removemos todos os objetos de estilo 'inline'
+function CardMesa({ mesa, onReservarClick }) {
   return (
-    // Usamos 'className' para aplicar os estilos do CardMesa.css
-    <div className="card-mesa">
-      <h3>Mesa Nº {mesa.id}</h3> 
+    <div className="card-mesa" onClick={() => onReservarClick(mesa)}>
+      <div className="card-mesa-icon">
+       <img src={tableIcon} alt="Ícone de Mesa" className="table-icon-img" />
+      </div>
       <p>Capacidade: {mesa.capacidade} pessoas</p>
       
-      <button onClick={() => onReservarClick(mesa)}>
+      <button className="btn btn-gradient">
         Reservar
       </button>
     </div>

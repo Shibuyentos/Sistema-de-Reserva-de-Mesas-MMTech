@@ -1,27 +1,25 @@
 /* frontend/src/index.css */
-
-/* frontend/src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
-  --cor-primaria: #6f42c1;
-  --cor-acento: #03dac6;          
-  --cor-fundo: #f8f9fa;            
-  --cor-superficie: #ffffff;       
-  --cor-texto: #212529;            
-  --cor-texto-secundario: #6c757d; 
-  --cor-borda: #dee2e6;            
+  --cor-fundo: #FFFFFF;
+  --cor-superficie: #FFFFFF;
+  --cor-primaria: #8a2be2; /* Roxo vibrante */
+  --cor-secundaria: #007BFF; /* Azul vibrante */
+  --gradiente-principal: linear-gradient(90deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
+  --cor-texto: #1F2937;
+  --cor-texto-secundario: #6B7280;
+  --cor-borda: #E5E7EB;
+  --sombra-sutil: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 body {
   margin: 0;
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
   background-color: var(--cor-fundo);
   color: var(--cor-texto);
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -33,36 +31,51 @@ body {
 }
 
 h1, h2, h3 {
-  color: var(--cor-primaria);
+  color: var(--cor-texto);
   font-weight: 600;
 }
 
-a {
-  font-weight: 500;
-  color: var(--cor-acento);
-  text-decoration: inherit;
-  transition: color 0.25s;
-}
-a:hover {
-  color: #01a99a;
-}
-
-/* DOCUMENTAÇÃO:
-  - O botão principal agora tem texto branco para contrastar com o fundo roxo.
-*/
-button {
+.btn {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--cor-primaria);
-  color: #ffffff; /* Garante que o texto do botão seja sempre claro */
   cursor: pointer;
-  transition: background-color 0.25s, border-color 0.25s;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  display: inline-block;
 }
-button:hover {
-  background-color: #5a349c;
-  border-color: var(--cor-acento);
+
+.btn-gradient {
+  background: var(--gradiente-principal);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background-color: #F3F4F6;
+  color: var(--cor-texto-secundario);
+}
+
+.btn-secondary:hover {
+  background-color: #E5E7EB;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
