@@ -1,55 +1,38 @@
 /* frontend/src/pages/AdminPage.css */
-.admin-page-container {
-  background-color: var(--cor-superficie);
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: var(--sombra-sutil);
-  border: 1px solid var(--cor-borda);
+/* ... (código existente) ... */
+
+.coluna-acoes {
+  text-align: center;
 }
 
-.admin-page-container h1 {
-  color: var(--cor-texto);
-  text-align: left;
-  margin-bottom: 1.5rem;
+.btn-acao {
+  padding: 0.4em 0.8em;
+  font-size: 0.9em;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-.report-table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
+.btn-acao:hover {
+  opacity: 0.85;
 }
 
-.report-table th,
-.report-table td {
-  border-bottom: 1px solid var(--cor-borda);
-  padding: 12px 15px;
-  text-align: left;
+.btn-acao.check-in {
+  background-color: #2ECC71; /* Verde */
 }
 
-.report-table th {
-  background-color: #F9FAFB;
-  color: var(--cor-primaria);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85em;
-  letter-spacing: 0.5px;
+.btn-acao.check-out {
+  background-color: #E74C3C; /* Vermelho */
 }
 
-.report-table tbody tr {
-    transition: background-color 0.2s ease-in-out;
+/* Estilo para reservas já finalizadas (com check-out) */
+.reserva-finalizada {
+  opacity: 0.6;
+  background-color: #f8f9fa;
 }
 
-.report-table tbody tr:hover {
-  background-color: #F9FAFB;
-}
-
-.loading-message,
-.error-message {
-  font-size: 1.2em;
-  margin-top: 2rem;
+.reserva-finalizada td {
   color: var(--cor-texto-secundario);
-}
-
-.error-message {
-  color: #D90429;
 }

@@ -1,0 +1,47 @@
+/* frontend/src/components/FormNovaMesa.css */
+.form-nova-mesa-container {
+  background-color: #F9FAFB;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  margin-bottom: 2rem;
+}
+
+.form-nova-mesa-container h3 {
+  margin-top: 0;
+  text-align: left;
+  color: var(--cor-texto);
+}
+
+.form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-group-inline label {
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+}
+
+.form-group-inline input {
+  width: 100px;
+  padding: 0.6em;
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda);
+  font-size: 1em;
+}
+
+.mensagem-erro {
+  color: var(--cor-erro);
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+
+.mensagem-sucesso {
+  color: #10B981; /* Verde */
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+  text-align: left;
+}
