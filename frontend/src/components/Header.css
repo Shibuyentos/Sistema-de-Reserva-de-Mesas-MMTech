@@ -32,6 +32,8 @@
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .nav-link {
@@ -41,6 +43,7 @@
   text-decoration: none;
   transition: color 0.3s ease;
   position: relative;
+  white-space: nowrap; /* Evita que os links quebrem linha */
 }
 
 .nav-link:hover {
@@ -52,38 +55,64 @@
   font-weight: 600;
 }
 
+/* ======================================================================== */
+/* CORREÇÃO PARA O BOTÃO DE LOGOUT 👇 */
+/* ======================================================================== */
+/*
+  DOCUMENTAÇÃO: Unificamos o estilo para que funcione perfeitamente
+  tanto em links (`<a>`) como em botões (`<button>`).
+  - `font-family` e `font-size` herdados garantem consistência.
+  - `white-space: nowrap` impede que o texto "Logout" quebre para outra linha.
+*/
 .btn-nav-ghost {
   padding: 0.6em 1.2em;
-  border: 2px solid transparent;
+  border: 2px solid var(--cor-primaria);
   border-radius: 8px;
-  background-clip: padding-box;
-  background-image: var(--gradiente-principal);
-  position: relative;
+  background-color: transparent;
   color: var(--cor-primaria);
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
-}
-
-.btn-nav-ghost::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  margin: -2px; 
-  border-radius: inherit; 
-  background: var(--gradiente-principal);
+  cursor: pointer;
+  
+  /* Garantir consistência entre <button> e <a> */
+  font-family: inherit; 
+  font-size: 1em;
+  white-space: nowrap;
 }
 
 .btn-nav-ghost:hover {
-  background-image: none; 
-  background-color: transparent;
+  background: var(--gradiente-principal);
+  border-color: transparent;
   color: white;
 }
 
-.btn-nav-ghost:hover::before{
-    background: var(--gradiente-principal); 
+.welcome-message {
+  color: var(--cor-texto-secundario);
+  font-weight: 500;
+  white-space: nowrap; /* Evita que o nome quebre linha */
+}
+
+/* ======================================================================== */
+/* MELHORIA DE RESPONSIVIDADE 👇 */
+/* ======================================================================== */
+/*
+  DOCUMENTAÇÃO: Media Query para telas menores (ex: tablets e telemóveis).
+  Quando a largura da tela for 768px ou menos, estas regras serão aplicadas.
+*/
+@media (max-width: 768px) {
+  .welcome-message {
+    /* Esconde a mensagem de boas-vindas para poupar espaço */
+    display: none;
+  }
+
+  .navbar-center {
+    /* Reduz o espaçamento entre os links do menu */
+    gap: 0.5rem;
+  }
+
+  .navbar-right {
+    /* Reduz o espaçamento no lado direito */
+    gap: 0.5rem;
+  }
 }
