@@ -1,20 +1,19 @@
-// frontend/src/pages/AdminPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { getHistoricoDeReservas, fazerCheckIn, fazerCheckOut } from '../services/apiService';
-import FormNovaMesa from '../components/FormNovaMesa'; // Importamos o novo formulário
+import FormNovaMesa from '../components/FormNovaMesa';
+import { useToast } from '../context/ToastContext';
 import './AdminPage.css';
 
 function AdminPage() {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToast } = useToast();
 
-  // Usamos useCallback para evitar recriar a função em cada renderização
   const buscarHistorico = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getHistoricoDeReservas();
-      // Ordenamos para que as reservas mais recentes e ativas apareçam primeiro
       const sortedReservas = response.data.data.sort((a, b) => {
         if (a.check_out_at && !b.check_out_at) return 1;
         if (!a.check_out_at && b.check_out_at) return -1;
@@ -23,35 +22,35 @@ function AdminPage() {
       setReservas(sortedReservas);
     } catch (err) {
       setError('Não foi possível carregar o histórico de reservas.');
-      console.error(err);
+      addToast('Erro ao carregar histórico.', 'error');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [addToast]);
 
   useEffect(() => {
     buscarHistorico();
   }, [buscarHistorico]);
 
   const handleCheckIn = async (reservaId) => {
-    if (!window.confirm('Tem a certeza de que deseja fazer o check-in?')) return;
+    if (!window.confirm('Tem certeza de que deseja fazer o check-in?')) return;
     try {
       await fazerCheckIn(reservaId);
-      alert('Check-in realizado com sucesso!');
-      buscarHistorico(); // Atualiza a lista
+      addToast('Check-in realizado com sucesso!', 'success');
+      buscarHistorico();
     } catch (err) {
-      alert(`Erro ao fazer check-in: ${err.response?.data?.message || err.message}`);
+      addToast(`Erro ao fazer check-in: ${err.response?.data?.message || err.message}`, 'error');
     }
   };
 
   const handleCheckOut = async (reservaId) => {
-    if (!window.confirm('Tem a certeza de que deseja fazer o check-out? Esta ação irá libertar a mesa.')) return;
+    if (!window.confirm('Tem certeza de que deseja fazer o check-out? Esta ação irá liberar a mesa.')) return;
     try {
       await fazerCheckOut(reservaId);
-      alert('Check-out realizado com sucesso!');
-      buscarHistorico(); // Atualiza a lista
+      addToast('Check-out realizado com sucesso!', 'success');
+      buscarHistorico();
     } catch (err) {
-      alert(`Erro ao fazer check-out: ${err.response?.data?.message || err.message}`);
+      addToast(`Erro ao fazer check-out: ${err.response?.data?.message || err.message}`, 'error');
     }
   };
 
@@ -61,14 +60,18 @@ function AdminPage() {
     return new Date(dataISO).toLocaleDateString('pt-BR', options);
   };
 
+  const handleMesaAdicionada = () => {
+      addToast('Mesa adicionada! Tabela atualizada.', 'success');
+      // Opcionalmente recarregar mesas se essa página mostrasse mesas, mas aqui mostra histórico.
+  };
+
   return (
     <div className="admin-page-container">
-      {/* Adicionamos o formulário aqui */}
-      <FormNovaMesa onMesaAdicionada={() => alert('Mesa adicionada! A página inicial será atualizada.')} />
+      <FormNovaMesa onMesaAdicionada={handleMesaAdicionada} />
 
       <h1>Relatório - Histórico de Reservas</h1>
 
-      {loading && <p className="loading-message">A carregar o relatório...</p>}
+      {loading && <p className="loading-message">Carregando relatório...</p>}
       {error && <p className="error-message">{error}</p>}
       
       {!loading && !error && (
@@ -82,7 +85,7 @@ function AdminPage() {
               <th>Fim</th>
               <th>Check-in</th>
               <th>Check-out</th>
-              <th>Ações</th> {/* Nova coluna para os botões */}
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>

@@ -20,7 +20,7 @@
 -   **Painel de Administração:**
     -   Página protegida e acessível apenas por administradores.
     -   [cite_start]Visualização completa do histórico de todas as reservas para rastreamento e geração de relatórios[cite: 26].
-    -   [cite_start]Ferramentas para registar novas mesas [cite: 15] e gerir o check-in/check-out de qualquer reserva.
+    -   Ferramentas para registrar novas mesas e gerir o check-in/check-out de qualquer reserva.
 -   [cite_start]**Interface Moderna e Responsiva:** Foco em UX/UI para garantir que a interface seja fácil de usar[cite: 30], com animações suaves, tooltips informativos e um design que se adapta a diferentes tamanhos de ecrã.
 
 ---
@@ -49,7 +49,7 @@
 
 ## 🚀 Como Executar o Projeto Localmente
 
-[cite_start]Siga os passos abaixo para configurar e executar o projeto no seu ambiente de desenvolvimento[cite: 10].
+Siga os passos abaixo para configurar e executar o projeto no seu ambiente de desenvolvimento.
 
 ### Pré-requisitos
 
@@ -57,70 +57,57 @@
 -   **npm** (geralmente instalado com o Node.js)
 -   **PostgreSQL** instalado e a rodar na sua máquina.
 
-### 1. Configuração da Base de Dados
+### 1. Configuração do Ambiente
 
-Antes de iniciar o backend, crie uma base de dados no PostgreSQL (ex: `mmtech_reservas`) e execute as seguintes queries para criar as tabelas necessárias:
+```bash
+# 1. Clone o repositório e navegue para a pasta do projeto
+cd Sistema-de-Reserva-de-Mesas-MMTech
 
-```sql
--- Tabela para os utilizadores
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
-    perfil VARCHAR(20) DEFAULT 'membro' NOT NULL, -- pode ser 'membro' ou 'admin'
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+# 2. Copie o ficheiro de exemplo de variáveis de ambiente
+cp .env.example .env
 
--- Tabela para as mesas
-CREATE TABLE mesas (
-    id SERIAL PRIMARY KEY,
-    capacidade INTEGER NOT NULL,
-    status VARCHAR(20) DEFAULT 'disponível' NOT NULL
-);
-
--- Tabela para as reservas
-CREATE TABLE reservas (
-    id SERIAL PRIMARY KEY,
-    mesa_id INTEGER NOT NULL REFERENCES mesas(id),
-    membro VARCHAR(100) NOT NULL,
-    finalidade VARCHAR(255),
-    data_hora_inicio TIMESTAMP WITH TIME ZONE NOT NULL,
-    data_hora_fim TIMESTAMP WITH TIME ZONE NOT NULL,
-    check_in_at TIMESTAMP WITH TIME ZONE,
-    check_out_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+# 3. Edite o ficheiro .env na raiz do projeto com as suas credenciais:
+# DB_HOST=localhost
+# DB_PORT=5432
+# DB_NAME=mmtech_reservas
+# DB_USER=postgres
+# DB_PASSWORD=sua_senha_aqui
+# JWT_SECRET=sua_chave_secreta_jwt_aqui
 ```
 
-### 2. Configuração do Backend
+### 2. Configuração da Base de Dados
+
+Crie uma base de dados no PostgreSQL e execute o script de migrations:
+
+```bash
+# 1. Crie o banco de dados (via psql ou pgAdmin)
+# CREATE DATABASE mmtech_reservas;
+
+# 2. Execute o script de criação das tabelas
+psql -U postgres -d mmtech_reservas -f database/migrations/001_create_tables.sql
+```
+
+Ou copie o conteúdo do arquivo `database/migrations/001_create_tables.sql` e execute no seu cliente PostgreSQL preferido.
+
+### 3. Iniciar o Backend
 
 ```bash
 # 1. Navegue para a pasta do backend
 cd backend
 
-# 2. Crie um ficheiro .env na raiz da pasta 'backend' e adicione as suas variáveis de ambiente:
-# Exemplo de .env:
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=seu_banco_de_dados
-DB_USER=seu_utilizador
-DB_PASSWORD=sua_senha
-JWT_SECRET=um_segredo_muito_forte_para_o_jwt
-
-# 3. Instale as dependências
+# 2. Instale as dependências
 npm install
 
-# 4. Inicie o servidor de desenvolvimento
+# 3. Inicie o servidor de desenvolvimento
 npm run dev
 
 # O servidor backend estará a rodar em http://localhost:3000
 ```
 
-### 3. Configuração do Frontend
+### 4. Iniciar o Frontend
 
 ```bash
-# 1. A partir da raiz do projeto, navegue para a pasta do frontend
+# 1. Em outro terminal, navegue para a pasta do frontend
 cd frontend
 
 # 2. Instale as dependências
@@ -129,12 +116,12 @@ npm install
 # 3. Inicie a aplicação de desenvolvimento
 npm run dev
 
-# A aplicação frontend estará acessível em http://localhost:5173 (ou outra porta indicada pelo Vite)
+# A aplicação frontend estará acessível em http://localhost:5173
 ```
 
 ---
 
-## [cite_start]🏛️ Diagramas e Arquitetura [cite: 45]
+## Diagramas e Arquitetura
 
 [cite_start]Conforme solicitado[cite: 45], aqui estão as descrições da arquitetura e do modelo de dados.
 
