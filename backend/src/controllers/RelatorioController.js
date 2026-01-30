@@ -1,46 +1,37 @@
-// backend/src/controllers/RelatorioController.js
-const pool = require('../config/database');
+const prisma = require('../config/prisma');
 
 class RelatorioController {
     async gerarHistoricoReservas(req, res) {
         try {
-            const query = `
-            SELECT 
-                r.id AS reserva_id,
-                r.mesa_id,
-                m.capacidade,
-                r.membro,
-                r.finalidade,
-                r.data_hora_inicio,
-                r.data_hora_fim,
-                r.check_in_at,
-                r.check_out_at
-            FROM 
-                reservas r
-            JOIN
-                mesas m 
-                ON r.mesa_id = m.id
-            ORDER BY
-                r.data_hora_inicio DESC`
-            
-            const result = await pool.query(query);
+            const reservas = await prisma.reserva.findMany({
+                include: {
+                    mesa: true,
+                    usuario: true
+                },
+                orderBy: { dataHoraInicio: 'desc' }
+            });
 
-            res
-                .status(200)
-                .json({
-                    success: true,
-                    message: 'Histórico de reservas gerado com sucesso',
-                    data: result.rows
-                });
+            // Formatando para snake_case (compatibilidade Frontend Admin)
+            const data = reservas.map(r => ({
+                reserva_id: r.id,
+                mesa_id: r.mesaId,
+                capacidade: r.mesa.capacidade,
+                membro: r.usuario.nome, // Pega nome do usuário
+                finalidade: r.finalidade,
+                data_hora_inicio: r.dataHoraInicio,
+                data_hora_fim: r.dataHoraFim,
+                check_in_at: r.checkInAt,
+                check_out_at: r.checkOutAt
+            }));
+
+            res.status(200).json({
+                success: true,
+                message: 'Histórico gerado',
+                data: data
+            });
 
         } catch (error) {
-            res
-            .status(500)
-            .json({
-                success: false,
-                message: 'Erro ao gerar o relatorio de histórico de reservas',
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 }

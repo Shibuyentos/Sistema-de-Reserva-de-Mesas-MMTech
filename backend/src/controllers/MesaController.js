@@ -1,5 +1,4 @@
-// backend/src/controllers/MesaController.js
-const pool = require('../config/database');
+const prisma = require('../config/prisma');
 
 class MesaController {
     async registrarMesa(req, res) {
@@ -8,80 +7,65 @@ class MesaController {
         if (!capacidade || typeof capacidade !== 'number' || capacidade <= 0) { 
             return res.status(400).json({ 
                 success: false, 
-                message: 'O campo "capacidade" é obrigatório e deve ser um número positivo.'
+                message: 'O campo "capacidade" é obrigatório.'
             });
         }
 
         try {
-            const query = 'INSERT INTO mesas (capacidade) VALUES ($1) RETURNING *';
-            const values = [capacidade];
-            
-            const result = await pool.query(query, values);
+            const novaMesa = await prisma.mesa.create({
+                data: { capacidade }
+            });
 
             res.status(201).json({
                 success: true,
                 message: 'Mesa registrada com sucesso!',
-                mesa: result.rows[0]
+                mesa: novaMesa
             });
 
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao registrar a mesa.',
-                error: error.message
-            });
+            res.status(500).json({ success: false, message: 'Erro ao registrar a mesa.', error: error.message });
         }
     }
 
     async listarMesas(req, res) {
         try {
-            const query = `
-                SELECT 
-                    m.id,
-                    m.capacidade,
-                    m.status,
-                    r.membro,
-                    r.finalidade,
-                    r.data_hora_inicio,
-                    r.data_hora_fim
-                FROM 
-                    mesas m
-                LEFT JOIN 
-                    reservas r ON m.id = r.mesa_id AND r.check_out_at IS NULL
-                ORDER BY 
-                    m.id ASC
-            `;
-            const result = await pool.query(query);
+            // Busca todas as mesas e inclui reservas ativas (sem checkout)
+            const mesas = await prisma.mesa.findMany({
+                include: {
+                    reservas: {
+                        where: { checkOutAt: null }, // Apenas reservas ativas
+                        include: { usuario: true }   // Traz dados do usuário (antigo membro)
+                    }
+                },
+                orderBy: { id: 'asc' }
+            });
 
-            // Agora, formatamos a resposta para o frontend
-            const mesasFormatadas = result.rows.map(mesa => {
-                const isOcupada = mesa.status === 'indisponível' && mesa.membro != null;
+            // Formatação para manter compatibilidade com o Frontend
+            const mesasFormatadas = mesas.map(mesa => {
+                const reservaAtiva = mesa.reservas[0]; // Pega a primeira reserva ativa, se houver
+                
+                // Lógica de Ocupada: Tem reserva E status da mesa é indisponível
+                // Ou simplificando: se tem reserva ativa e a data bate com agora (opcional)
+                // Vamos manter a lógica do status do banco + presença de reserva
+                const isOcupada = mesa.status === 'indisponível' && reservaAtiva;
 
                 return {
                     id: mesa.id,
                     capacidade: mesa.capacidade,
-                    // Convertemos o status do backend para o que o frontend espera
                     status: isOcupada ? 'ocupada' : 'disponivel',
                     reserva_atual: isOcupada ? {
-                        membro: mesa.membro,
-                        finalidade: mesa.finalidade,
-                        data_hora_inicio: mesa.data_hora_inicio,
-                        data_hora_fim: mesa.data_hora_fim,
+                        membro: reservaAtiva.usuario.nome, // Mapeando usuario.nome para membro
+                        finalidade: reservaAtiva.finalidade,
+                        data_hora_inicio: reservaAtiva.dataHoraInicio,
+                        data_hora_fim: reservaAtiva.dataHoraFim,
                     } : null
                 };
             });
 
-            res.status(200).json({
-                success: true,
-                mesas: mesasFormatadas // Enviamos o novo array formatado
-            });
+            res.status(200).json({ success: true, mesas: mesasFormatadas });
 
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao buscar as mesas.',
-                error: error.message
-            });
+            res.status(500).json({ success: false, message: 'Erro ao buscar as mesas.', error: error.message });
         }
     }
 }
