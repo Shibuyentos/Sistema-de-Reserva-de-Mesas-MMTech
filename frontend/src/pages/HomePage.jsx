@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useModal } from '../context/ModalContext';
 import { getTodasAsMesas } from '../services/apiService';
 import CardMesa from '../components/CardMesa';
 import ModalReserva from '../components/ModalReserva';
@@ -15,6 +16,7 @@ function HomePage() {
   // Hooks para aceder ao contexto de autenticação e à navegação
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { showModal } = useModal();
 
   // Função para buscar os dados de todas as mesas na API
   const buscarMesas = async () => {
@@ -43,9 +45,12 @@ function HomePage() {
         setMesaSelecionada(mesa);
         setModalVisivel(true);
       } else {
-        // Se não estiver logado, exibe um alerta e redireciona para a página de login
-        alert('Por favor, faça o login para reservar uma mesa.');
-        navigate('/login');
+        // Se não estiver logado, exibe um modal e redireciona para a página de login
+        showModal({
+          type: 'info',
+          message: 'Por favor, faça o login para reservar uma mesa.',
+          onConfirm: () => navigate('/login'),
+        });
       }
     }
   };

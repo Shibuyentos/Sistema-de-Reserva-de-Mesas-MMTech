@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerUser } from '../services/apiService';
+import { useModal } from '../context/ModalContext';
 import './LoginPage.css'; // Reutilizamos o mesmo estilo do Login!
 
 function RegisterPage() {
@@ -10,14 +11,18 @@ function RegisterPage() {
     const [senha, setSenha] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { showModal } = useModal();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         try {
             await registerUser({ nome, email, senha });
-            alert('Registo efetuado com sucesso! Por favor, faça o login.');
-            navigate('/login');
+            showModal({
+                type: 'success',
+                message: 'Registo efetuado com sucesso! Por favor, faça o login.',
+                onConfirm: () => navigate('/login'),
+            });
         } catch (err) {
             setError(err.response?.data?.message || 'Erro ao fazer o registo.');
         }

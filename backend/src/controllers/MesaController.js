@@ -1,27 +1,25 @@
 // backend/src/controllers/MesaController.js
-const pool = require('../config/database');
+const db = require('../config/database');
 
 class MesaController {
     async registrarMesa(req, res) {
         const { capacidade } = req.body;
 
-        if (!capacidade || typeof capacidade !== 'number' || capacidade <= 0) { 
-            return res.status(400).json({ 
-                success: false, 
+        if (!capacidade || typeof capacidade !== 'number' || capacidade <= 0) {
+            return res.status(400).json({
+                success: false,
                 message: 'O campo "capacidade" é obrigatório e deve ser um número positivo.'
             });
         }
 
         try {
-            const query = 'INSERT INTO mesas (capacidade) VALUES ($1) RETURNING *';
-            const values = [capacidade];
-            
-            const result = await pool.query(query, values);
+            const result = db.prepare('INSERT INTO mesas (capacidade) VALUES (?)').run(capacidade);
+            const mesa = db.prepare('SELECT * FROM mesas WHERE id = ?').get(result.lastInsertRowid);
 
             res.status(201).json({
                 success: true,
                 message: 'Mesa registrada com sucesso!',
-                mesa: result.rows[0]
+                mesa
             });
 
         } catch (error) {
@@ -35,8 +33,8 @@ class MesaController {
 
     async listarMesas(req, res) {
         try {
-            const query = `
-                SELECT 
+            const rows = db.prepare(`
+                SELECT
                     m.id,
                     m.capacidade,
                     m.status,
@@ -44,23 +42,20 @@ class MesaController {
                     r.finalidade,
                     r.data_hora_inicio,
                     r.data_hora_fim
-                FROM 
+                FROM
                     mesas m
-                LEFT JOIN 
+                LEFT JOIN
                     reservas r ON m.id = r.mesa_id AND r.check_out_at IS NULL
-                ORDER BY 
+                ORDER BY
                     m.id ASC
-            `;
-            const result = await pool.query(query);
+            `).all();
 
-            // Agora, formatamos a resposta para o frontend
-            const mesasFormatadas = result.rows.map(mesa => {
+            const mesasFormatadas = rows.map(mesa => {
                 const isOcupada = mesa.status === 'indisponível' && mesa.membro != null;
 
                 return {
                     id: mesa.id,
                     capacidade: mesa.capacidade,
-                    // Convertemos o status do backend para o que o frontend espera
                     status: isOcupada ? 'ocupada' : 'disponivel',
                     reserva_atual: isOcupada ? {
                         membro: mesa.membro,
@@ -73,7 +68,7 @@ class MesaController {
 
             res.status(200).json({
                 success: true,
-                mesas: mesasFormatadas // Enviamos o novo array formatado
+                mesas: mesasFormatadas
             });
 
         } catch (error) {

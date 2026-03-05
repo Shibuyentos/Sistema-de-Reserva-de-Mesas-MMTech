@@ -1,13 +1,15 @@
 // frontend/src/pages/AdminPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { getHistoricoDeReservas, fazerCheckIn, fazerCheckOut } from '../services/apiService';
-import FormNovaMesa from '../components/FormNovaMesa'; // Importamos o novo formulário
+import FormNovaMesa from '../components/FormNovaMesa';
+import { useModal } from '../context/ModalContext';
 import './AdminPage.css';
 
 function AdminPage() {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { showModal } = useModal();
 
   // Usamos useCallback para evitar recriar a função em cada renderização
   const buscarHistorico = useCallback(async () => {
@@ -33,26 +35,36 @@ function AdminPage() {
     buscarHistorico();
   }, [buscarHistorico]);
 
-  const handleCheckIn = async (reservaId) => {
-    if (!window.confirm('Tem a certeza de que deseja fazer o check-in?')) return;
-    try {
-      await fazerCheckIn(reservaId);
-      alert('Check-in realizado com sucesso!');
-      buscarHistorico(); // Atualiza a lista
-    } catch (err) {
-      alert(`Erro ao fazer check-in: ${err.response?.data?.message || err.message}`);
-    }
+  const handleCheckIn = (reservaId) => {
+    showModal({
+      type: 'confirm',
+      message: 'Tem a certeza de que deseja fazer o check-in?',
+      onConfirm: async () => {
+        try {
+          await fazerCheckIn(reservaId);
+          showModal({ type: 'success', message: 'Check-in realizado com sucesso!' });
+          buscarHistorico();
+        } catch (err) {
+          showModal({ type: 'error', message: `Erro ao fazer check-in: ${err.response?.data?.message || err.message}` });
+        }
+      },
+    });
   };
 
-  const handleCheckOut = async (reservaId) => {
-    if (!window.confirm('Tem a certeza de que deseja fazer o check-out? Esta ação irá libertar a mesa.')) return;
-    try {
-      await fazerCheckOut(reservaId);
-      alert('Check-out realizado com sucesso!');
-      buscarHistorico(); // Atualiza a lista
-    } catch (err) {
-      alert(`Erro ao fazer check-out: ${err.response?.data?.message || err.message}`);
-    }
+  const handleCheckOut = (reservaId) => {
+    showModal({
+      type: 'confirm',
+      message: 'Tem a certeza de que deseja fazer o check-out? Esta ação irá libertar a mesa.',
+      onConfirm: async () => {
+        try {
+          await fazerCheckOut(reservaId);
+          showModal({ type: 'success', message: 'Check-out realizado com sucesso!' });
+          buscarHistorico();
+        } catch (err) {
+          showModal({ type: 'error', message: `Erro ao fazer check-out: ${err.response?.data?.message || err.message}` });
+        }
+      },
+    });
   };
 
   const formatarData = (dataISO) => {
@@ -64,7 +76,7 @@ function AdminPage() {
   return (
     <div className="admin-page-container">
       {/* Adicionamos o formulário aqui */}
-      <FormNovaMesa onMesaAdicionada={() => alert('Mesa adicionada! A página inicial será atualizada.')} />
+      <FormNovaMesa onMesaAdicionada={() => showModal({ type: 'success', message: 'Mesa adicionada com sucesso!' })} />
 
       <h1>Relatório - Histórico de Reservas</h1>
 

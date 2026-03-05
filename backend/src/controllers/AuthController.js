@@ -1,5 +1,5 @@
 // backend/src/controllers/AuthController.js
-const pool = require('../config/database');
+const db = require('../config/database');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -12,16 +12,16 @@ class AuthController {
         }
 
         try {
-            const hashedPassword = await bcrypt.hash(senha, 10); // Encripta a senha
+            const hashedPassword = await bcrypt.hash(senha, 10);
 
-            const newUser = await pool.query(
-                'INSERT INTO usuarios (nome, email, senha) VALUES ($1, $2, $3) RETURNING id, nome, email, perfil',
-                [nome, email, hashedPassword]
-            );
+            const stmt = db.prepare('INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)');
+            const result = stmt.run(nome, email, hashedPassword);
 
-            res.status(201).json({ success: true, user: newUser.rows[0] });
+            const newUser = db.prepare('SELECT id, nome, email, perfil FROM usuarios WHERE id = ?').get(result.lastInsertRowid);
+
+            res.status(201).json({ success: true, user: newUser });
         } catch (error) {
-            if (error.code === '23505') { // Código de erro para violação de constraint UNIQUE
+            if (error.code === 'SQLITE_CONSTRAINT_UNIQUE' || (error.message && error.message.includes('UNIQUE constraint failed'))) {
                 return res.status(409).json({ success: false, message: 'Este e-mail já está em uso.' });
             }
             res.status(500).json({ success: false, message: 'Erro ao registrar utilizador.', error: error.message });
@@ -36,8 +36,7 @@ class AuthController {
         }
 
         try {
-            const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-            const user = result.rows[0];
+            const user = db.prepare('SELECT * FROM usuarios WHERE email = ?').get(email);
 
             if (!user) {
                 return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
@@ -48,10 +47,9 @@ class AuthController {
                 return res.status(401).json({ success: false, message: 'Palavra-passe incorreta.' });
             }
 
-            // Gera o Token JWT
             const token = jwt.sign(
                 { id: user.id, nome: user.nome, perfil: user.perfil },
-                process.env.JWT_SECRET || 'seu_segredo_jwt_aqui', // Crie uma variável JWT_SECRET no seu .env
+                process.env.JWT_SECRET || 'seu_segredo_jwt_aqui',
                 { expiresIn: '8h' }
             );
 
