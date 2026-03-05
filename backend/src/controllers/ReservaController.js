@@ -25,6 +25,7 @@ class ReservaController {
     }
 
     async SolicitarReserva(req, res) {
+    async SolicitarReserva(req, res) {
         const { mesa_id, finalidade, data_hora_inicio, data_hora_fim } = req.body;
         const membro = req.user.nome;
 
@@ -118,17 +119,14 @@ class ReservaController {
                 reserva: reservaAtualizada,
             });
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao realizar o check-in',
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 
     async CheckOut(req, res) {
         const { reserva_id } = req.params;
-        const nomeDoMembro = req.user.nome;
+        const usuarioId = req.user.id;
+        const perfilUser = req.user.perfil;
 
         try {
             const reserva = db.prepare('SELECT membro FROM reservas WHERE id = ?').get(reserva_id);
@@ -162,10 +160,8 @@ class ReservaController {
 
             transact();
 
-            res.status(200).json({
-                success: true,
-                message: 'Check-out efetuado com sucesso. A mesa foi liberada!',
-            });
+            res.status(200).json({ success: true, message: 'Check-out realizado e mesa liberada.' });
+
         } catch (error) {
             if (error.isNotFound) {
                 return res.status(404).json({ success: false, message: error.message });
@@ -198,11 +194,7 @@ class ReservaController {
             });
 
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao buscar as suas reservas.',
-                error: error.message
-            });
+            res.status(500).json({ success: false, error: error.message });
         }
     }
 }

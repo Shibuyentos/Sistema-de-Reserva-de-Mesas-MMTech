@@ -2,23 +2,20 @@
 const jwt = require('jsonwebtoken');
 
 const proteger = (req, res, next) => {
-    let token;
     const authHeader = req.headers.authorization;
 
     if (authHeader && authHeader.startsWith('Bearer ')) {
         try {
-            token = authHeader.split(' ')[1];
+            const token = authHeader.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET || 'seu_segredo_jwt_aqui');
             req.user = decoded; // Adiciona os dados do user ao objeto da requisição
-            next();
+            return next();
         } catch (error) {
-            res.status(401).json({ message: 'Token não é válido.' });
+            return res.status(401).json({ message: 'Token não é válido.' });
         }
     }
 
-    if (!token) {
-        res.status(401).json({ message: 'Acesso não autorizado, sem token.' });
-    }
+    return res.status(401).json({ message: 'Acesso não autorizado, sem token.' });
 };
 
 const isAdmin = (req, res, next) => {

@@ -23,11 +23,7 @@ class MesaController {
             });
 
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao registrar a mesa.',
-                error: error.message
-            });
+            res.status(500).json({ success: false, message: 'Erro ao registrar a mesa.', error: error.message });
         }
     }
 
@@ -58,10 +54,10 @@ class MesaController {
                     capacidade: mesa.capacidade,
                     status: isOcupada ? 'ocupada' : 'disponivel',
                     reserva_atual: isOcupada ? {
-                        membro: mesa.membro,
-                        finalidade: mesa.finalidade,
-                        data_hora_inicio: mesa.data_hora_inicio,
-                        data_hora_fim: mesa.data_hora_fim,
+                        membro: reservaAtiva.usuario.nome, // Mapeando usuario.nome para membro
+                        finalidade: reservaAtiva.finalidade,
+                        data_hora_inicio: reservaAtiva.dataHoraInicio,
+                        data_hora_fim: reservaAtiva.dataHoraFim,
                     } : null
                 };
             });
@@ -72,11 +68,7 @@ class MesaController {
             });
 
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: 'Erro ao buscar as mesas.',
-                error: error.message
-            });
+            res.status(500).json({ success: false, message: 'Erro ao buscar as mesas.', error: error.message });
         }
     }
 }

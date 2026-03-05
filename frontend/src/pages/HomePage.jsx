@@ -12,40 +12,29 @@ function HomePage() {
   const [mesas, setMesas] = useState([]);
   const [modalVisivel, setModalVisivel] = useState(false);
   const [mesaSelecionada, setMesaSelecionada] = useState(null);
-
-  // Hooks para aceder ao contexto de autenticação e à navegação
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { showModal } = useModal();
 
-  // Função para buscar os dados de todas as mesas na API
   const buscarMesas = async () => {
     try {
       const response = await getTodasAsMesas();
-      setMesas(response.data.mesas); 
+      setMesas(response.data.mesas);
     } catch (error) {
       console.error('Erro ao buscar todas as mesas:', error);
     }
   };
 
-  // O useEffect vai executar a função buscarMesas assim que o componente for montado
   useEffect(() => {
     buscarMesas();
   }, []);
 
-  /**
-   * Função chamada quando um card de mesa é clicado.
-   * Verifica se o utilizador está logado antes de abrir o modal de reserva.
-   */
   const handleAbrirModal = (mesa) => {
-    // Apenas mesas com status 'disponivel' podem ser reservadas
     if (mesa.status === 'disponivel') {
       if (user) {
-        // Se o utilizador estiver logado, abre o modal
         setMesaSelecionada(mesa);
         setModalVisivel(true);
       } else {
-        // Se não estiver logado, exibe um modal e redireciona para a página de login
         showModal({
           type: 'info',
           message: 'Por favor, faça o login para reservar uma mesa.',
@@ -55,16 +44,14 @@ function HomePage() {
     }
   };
 
-  // Função para fechar o modal de reserva
   const handleFecharModal = () => {
     setModalVisivel(false);
     setMesaSelecionada(null);
   };
 
-  // Função chamada após uma reserva ser bem-sucedida
   const handleReservaSucesso = () => {
     handleFecharModal();
-    buscarMesas(); // Atualiza a lista de mesas para refletir o novo status
+    buscarMesas();
   };
 
   return (
@@ -88,7 +75,6 @@ function HomePage() {
         )}
       </div>
 
-      {/* O ModalReserva só é renderizado se modalVisivel for true */}
       {modalVisivel && (
         <ModalReserva
           mesa={mesaSelecionada}

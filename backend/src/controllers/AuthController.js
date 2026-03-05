@@ -31,10 +31,6 @@ class AuthController {
     async login(req, res) {
         const { email, senha } = req.body;
 
-        if (!email || !senha) {
-            return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
-        }
-
         try {
             const user = db.prepare('SELECT * FROM usuarios WHERE email = ?').get(email);
 

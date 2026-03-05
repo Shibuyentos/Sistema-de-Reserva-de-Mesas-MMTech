@@ -11,12 +11,10 @@ function AdminPage() {
   const [error, setError] = useState(null);
   const { showModal } = useModal();
 
-  // Usamos useCallback para evitar recriar a função em cada renderização
   const buscarHistorico = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getHistoricoDeReservas();
-      // Ordenamos para que as reservas mais recentes e ativas apareçam primeiro
       const sortedReservas = response.data.data.sort((a, b) => {
         if (a.check_out_at && !b.check_out_at) return 1;
         if (!a.check_out_at && b.check_out_at) return -1;
@@ -75,14 +73,13 @@ function AdminPage() {
 
   return (
     <div className="admin-page-container">
-      {/* Adicionamos o formulário aqui */}
       <FormNovaMesa onMesaAdicionada={() => showModal({ type: 'success', message: 'Mesa adicionada com sucesso!' })} />
 
       <h1>Relatório - Histórico de Reservas</h1>
 
       {loading && <p className="loading-message">A carregar o relatório...</p>}
       {error && <p className="error-message">{error}</p>}
-      
+
       {!loading && !error && (
         <table className="report-table">
           <thead>
@@ -94,7 +91,7 @@ function AdminPage() {
               <th>Fim</th>
               <th>Check-in</th>
               <th>Check-out</th>
-              <th>Ações</th> {/* Nova coluna para os botões */}
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>

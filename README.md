@@ -3,10 +3,11 @@
 ![Logo da MMTech](frontend/src/assets/logo.png)
 
 > Este sistema tem como objetivo permitir que os membros de um espaço de coworking reservem mesas conforme necessário. O projeto foi desenvolvido como um teste de desenvolvimento, abrangendo desde a criação do backend e frontend até à implementação de funcionalidades complexas como autenticação e gestão em tempo real.
+> Este sistema tem como objetivo permitir que os membros de um espaço de coworking reservem mesas conforme necessário. O projeto foi desenvolvido como um teste de desenvolvimento, abrangendo desde a criação do backend e frontend até à implementação de funcionalidades complexas como autenticação e gestão em tempo real.
 
 ---
 
-## ✨ Funcionalidades Principais
+## Funcionalidades Principais
 
 -   **Visualização de Mesas:** Interface principal que exibe todas as mesas com o seu status em tempo real (Disponível / Ocupada).
 -   **Sistema de Autenticação Completo:**
@@ -25,7 +26,7 @@
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 #### **Backend**
 
@@ -36,13 +37,12 @@
 -   **Bcrypt.js** para encriptação de senhas
 
 #### **Frontend**
-
--   **React** (com Vite)
--   **React Router** para gestão de rotas
--   **React Context API** para gestão de estado global (autenticação)
--   **Axios** para as requisições à API
--   **React Feather** para os ícones
--   **CSS3** com Variáveis para estilização
+- **React** (Vite)
+- **React Router** para gerenciamento de rotas
+- **React Context API** para estado global (Autenticação e Notificações)
+- **Axios** para requisições à API
+- **React Feather** para ícones
+- **CSS3** com Variáveis para estilização
 
 ---
 
@@ -58,7 +58,6 @@
 ### 1. Backend
 
 ```bash
-# 1. Navegue para a pasta do backend
 cd backend
 
 # 2. Instale as dependências
@@ -80,13 +79,8 @@ O ficheiro `backend/database.db` será criado automaticamente com todas as tabel
 ### 2. Frontend
 
 ```bash
-# 1. A partir da raiz do projeto, navegue para a pasta do frontend
-cd frontend
-
-# 2. Instale as dependências
+cd ../frontend
 npm install
-
-# 3. Inicie a aplicação de desenvolvimento
 npm run dev
 ```
 
@@ -118,8 +112,7 @@ Três entidades principais:
 
 ---
 
-## ✍️ Autor
-
+## Autor
 **Kauann Shibuya**
 
 -   GitHub: [@Shibuyentos](https://github.com/Shibuyentos)
