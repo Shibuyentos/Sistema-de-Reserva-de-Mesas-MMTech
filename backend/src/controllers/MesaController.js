@@ -54,10 +54,10 @@ class MesaController {
                     capacidade: mesa.capacidade,
                     status: isOcupada ? 'ocupada' : 'disponivel',
                     reserva_atual: isOcupada ? {
-                        membro: reservaAtiva.usuario.nome, // Mapeando usuario.nome para membro
-                        finalidade: reservaAtiva.finalidade,
-                        data_hora_inicio: reservaAtiva.dataHoraInicio,
-                        data_hora_fim: reservaAtiva.dataHoraFim,
+                        membro: mesa.membro,
+                        finalidade: mesa.finalidade,
+                        data_hora_inicio: mesa.data_hora_inicio,
+                        data_hora_fim: mesa.data_hora_fim,
                     } : null
                 };
             });

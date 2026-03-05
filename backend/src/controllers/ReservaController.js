@@ -25,7 +25,6 @@ class ReservaController {
     }
 
     async SolicitarReserva(req, res) {
-    async SolicitarReserva(req, res) {
         const { mesa_id, finalidade, data_hora_inicio, data_hora_fim } = req.body;
         const membro = req.user.nome;
 
@@ -125,8 +124,7 @@ class ReservaController {
 
     async CheckOut(req, res) {
         const { reserva_id } = req.params;
-        const usuarioId = req.user.id;
-        const perfilUser = req.user.perfil;
+        const nomeDoMembro = req.user.nome;
 
         try {
             const reserva = db.prepare('SELECT membro FROM reservas WHERE id = ?').get(reserva_id);
