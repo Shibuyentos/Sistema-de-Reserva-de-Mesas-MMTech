@@ -3,7 +3,6 @@
 ![Logo da MMTech](frontend/src/assets/logo.png)
 
 > Este sistema tem como objetivo permitir que os membros de um espaço de coworking reservem mesas conforme necessário. O projeto foi desenvolvido como um teste de desenvolvimento, abrangendo desde a criação do backend e frontend até à implementação de funcionalidades complexas como autenticação e gestão em tempo real.
-> Este sistema tem como objetivo permitir que os membros de um espaço de coworking reservem mesas conforme necessário. O projeto foi desenvolvido como um teste de desenvolvimento, abrangendo desde a criação do backend e frontend até à implementação de funcionalidades complexas como autenticação e gestão em tempo real.
 
 ---
 
